@@ -19,9 +19,7 @@ class ChatHaruhi:
             # self.llm = LangChainGPT()
             self.llm, self.embedding, self.tokenizer = self.get_models('openai')
         elif llm == 'debug':
-            from .PrintLLM import PrintLLM
-            self.llm = PrintLLM()
-            _, self.embedding, self.tokenizer = self.get_models('openai')
+            self.llm, self.embedding, self.tokenizer = self.get_models( 'debug')
         else:
             print(f'warning! undefined llm {llm}, use openai instead.')
             self.llm, self.embedding, self.tokenizer = self.get_models('openai')
@@ -60,6 +58,9 @@ class ChatHaruhi:
         # return the combination of llm, embedding and tokenizer
         if model_name == 'openai':
             return (LangChainGPT(), luotuo_openai_embedding, tiktoken)
+        elif model_name == 'debug':
+            from .PrintLLM import PrintLLM
+            return (PrintLLM(), luotuo_openai_embedding, tiktoken)
         else:
             print(f'warning! undefined model {model_name}, use openai instead.')
             return (LangChainGPT(), luotuo_openai_embedding, tiktoken)
