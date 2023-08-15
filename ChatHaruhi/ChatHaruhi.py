@@ -18,7 +18,7 @@ class ChatHaruhi:
 
         
         if llm == 'openai':
-            self.llm = LangChainGPT()
+            # self.llm = LangChainGPT()
             self.llm, self.embedding, self.tokenizer = self.get_models('openai')
         elif llm == 'debug':
             self.llm, self.embedding, self.tokenizer = self.get_models( 'debug')
