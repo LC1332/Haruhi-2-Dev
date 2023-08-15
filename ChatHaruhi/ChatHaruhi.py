@@ -19,7 +19,7 @@ class ChatHaruhi:
             # self.llm = LangChainGPT()
             self.llm, self.embedding, self.tokenizer = self.get_models('openai')
         elif llm == 'debug':
-            from PrintLLM import PrintLLM
+            from .PrintLLM import PrintLLM
             self.llm = PrintLLM()
             _, self.embedding, self.tokenizer = self.get_models('openai')
         else:
