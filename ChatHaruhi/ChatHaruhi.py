@@ -170,8 +170,9 @@ class ChatHaruhi:
         
         sum_history_token = 0
         flag = 0
-        for (query, response) in reversed(self.dialogue_history):
-            current_count = self.tokenizer(query) + self.tokenizer(response)
+        for query, response in reversed(self.dialogue_history):
+            current_count = self.tokenizer(query) 
+            current_count += self.tokenizer(response)
             sum_history_token += current_count
             if sum_history_token > self.max_len_history:
                 break
