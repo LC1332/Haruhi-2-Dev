@@ -2,14 +2,15 @@ from .ChromaDB import ChromaDB
 from .LangChainGPT import LangChainGPT
 import os
 
-from .utils import luotuo_openai_embedding, tiktoken
+from .utils import luotuo_openai_embedding, tiktokenizer
 
 class ChatHaruhi:
 
     def __init__(self, system_prompt, \
                  story_db=None, story_text_folder = None, \
                  llm = 'openai', \
-                 max_len_story = None, max_len_history = None):
+                 max_len_story = None, max_len_history = None,
+                 verbose = False):
 
         self.system_prompt = system_prompt
 
@@ -57,13 +58,13 @@ class ChatHaruhi:
     def get_models(self, model_name):
         # return the combination of llm, embedding and tokenizer
         if model_name == 'openai':
-            return (LangChainGPT(), luotuo_openai_embedding, tiktoken)
+            return (LangChainGPT(), luotuo_openai_embedding, tiktokenizer)
         elif model_name == 'debug':
             from .PrintLLM import PrintLLM
-            return (PrintLLM(), luotuo_openai_embedding, tiktoken)
+            return (PrintLLM(), luotuo_openai_embedding, tiktokenizer)
         else:
             print(f'warning! undefined model {model_name}, use openai instead.')
-            return (LangChainGPT(), luotuo_openai_embedding, tiktoken)
+            return (LangChainGPT(), luotuo_openai_embedding, tiktokenizer)
         
     def get_tokenlen_setting( self, model_name ):
         # return the setting of story and history token length
@@ -86,6 +87,9 @@ class ChatHaruhi:
                 file_path = os.path.join(text_folder, file)
                 with open(file_path, 'r', encoding='utf-8') as f:
                     strs.append(f.read())
+
+        if self.verbose:
+            print(f'starting extract embedding... for { len(strs) } files')
 
         vecs = []
 
