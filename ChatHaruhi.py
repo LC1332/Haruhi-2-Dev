@@ -6,12 +6,6 @@ import os
 
 from utils import luotuo_openai_embedding, tiktoken
 
-def foo_embedding(text):
-    return [0,0,0]
-
-def foo_tokenizer(text):
-    return 100
-
 class ChatHaruhi:
 
     def __init__(self, system_prompt, story_db=None, story_text_folder = None, llm = 'openai', max_len_story = 1500, max_len_history = 1200):
@@ -29,23 +23,39 @@ class ChatHaruhi:
         
         
         if llm == 'openai':
-            self.llm = LangChainGPT()
+            # self.llm = LangChainGPT()
+            self.llm, self.embedding, self.tokenizer = self.get_models('openai')
         else:
             print(f'warning! undefined llm {llm}, use openai instead.')
-            self.llm = LangChainGPT()
+            self.llm, self.embedding, self.tokenizer = self.get_models('openai')
 
-        self.max_len_story = 1500
-        self.max_len_history = 1200
+        self.max_len_story, self.max_len_history = self.get_tokenlen_setting('openai')
 
-        self.embedding = luotuo_openai_embedding
-        self.tokenizer = tiktoken
+        self.dialogue_history = []
 
+        # constants
         self.story_prefix_prompt = "Classic scenes for the role are as follows:"
         self.k_search = 19
-
         self.narrator = ['旁白', '', 'scene','Scene','narrator' , 'Narrator']
+        self.dialogue_divide_token = '\n###\n'
+        self.dialogue_bra_token = '「'
+        self.dialogue_ket_token = '」'
+
+    def get_models(self, model_name):
+        # return the combination of llm, embedding and tokenizer
+        if model_name == 'openai':
+            return (LangChainGPT(), luotuo_openai_embedding, tiktoken)
+        else:
+            print(f'warning! undefined model {model_name}, use openai instead.')
+            return (LangChainGPT(), luotuo_openai_embedding, tiktoken)
         
-        self.dialogue_history = []
+    def get_tokenlen_setting( self, model_name ):
+        # return the setting of story and history token length
+        if model_name == 'openai':
+            return (1500, 1200)
+        else:
+            print(f'warning! undefined model {model_name}, use openai instead.')
+            return (1500, 1200)
 
     def build_story_db(self, text_folder):
         # 实现读取文本文件夹,抽取向量的逻辑
@@ -97,7 +107,7 @@ class ChatHaruhi:
         if role in self.narrator:
             return ":" + text
         else:
-            return f"{role}:「{text}」"
+            return f"{role}:{self.dialogue_bra_token}{text}{self.dialogue_ket_token}"
         
     def add_story(self, query):
         query_vec = self.embedding(query)
@@ -108,12 +118,12 @@ class ChatHaruhi:
         sum_story_token = self.tokenizer(story_string)
         
         for story in stories:
-            story_token = self.tokenizer(story)
+            story_token = self.tokenizer(story) + self.tokenizer(self.dialogue_divide_token)
             if sum_story_token + story_token > self.max_len_story:
                 break
             else:
                 sum_story_token += story_token
-                story_string += story + "\n"
+                story_string += story + self.dialogue_divide_token
 
         self.llm.user_message(story_string)
         
@@ -128,7 +138,12 @@ class ChatHaruhi:
             else:
                 flag += 1
 
+        if flag == 0:
+            print('warning! no history added. the last dialogue is too long.')
+
         for (query, response) in self.dialogue_history[-flag:]:
             self.llm.ai_message(query)
             self.llm.user_message(response)
+
+        
         

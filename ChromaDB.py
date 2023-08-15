@@ -13,6 +13,10 @@ class ChromaDB(BaseDB):
     
     def init_db(self):
 
+        if self.client is not None:
+            print('ChromaDB has already been initialized')
+            return
+
         folder_name = ''
 
         while os.path.exists(folder_name) or folder_name == '':
