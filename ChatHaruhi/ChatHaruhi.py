@@ -49,7 +49,7 @@ class ChatHaruhi:
         self.dialogue_history = []
 
         # constants
-        self.story_prefix_prompt = "Classic scenes for the role are as follows:"
+        self.story_prefix_prompt = "Classic scenes for the role are as follows:\n"
         self.k_search = 19
         self.narrator = ['旁白', '', 'scene','Scene','narrator' , 'Narrator']
         self.dialogue_divide_token = '\n###\n'
@@ -104,6 +104,11 @@ class ChatHaruhi:
 
         vecs = []
 
+        ## TODO: 建立一个新的embedding batch test的单元测试
+        ## 新的支持list batch test的embedding代码
+        ## 用新的代码替换下面的for循环
+        ## Luotuo-bert-en也发布了，所以可以避开使用openai
+        
         for mystr in strs:
             vecs.append(self.embedding(mystr))
 
