@@ -47,7 +47,7 @@ class ChromaDB(BaseDB):
 
     def search(self, vector, n_results):
         results = self.collection.query(query_embeddings=[vector], n_results=n_results)
-        return results['documents']
+        return results['documents'][0]
 
     def init_from_docs(self, vectors, documents):
         if self.client is None:
