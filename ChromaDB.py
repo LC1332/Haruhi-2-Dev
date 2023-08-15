@@ -31,8 +31,9 @@ class ChromaDB(BaseDB):
             previous_path = self.path
             self.path = file_path
             self.client = chromadb.PersistentClient(path = file_path)
-            # remove previous path
-            os.system("rm -rf " + previous_path)
+            # remove previous path if it start with tempdb
+            if previous_path.startswith("tempdb"):
+                os.system("rm -rf " + previous_path)
                         
 
     def load(self, file_path):
