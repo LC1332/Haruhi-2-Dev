@@ -13,14 +13,6 @@ class ChatHaruhi:
 
         self.system_prompt = system_prompt
 
-        if story_db:
-            self.db = ChromaDB() 
-            self.db.load(story_db)
-        elif story_text_folder:
-            # print("Building story database from texts...")
-            self.db = self.build_story_db(story_text_folder) 
-        else:
-            raise ValueError("Either story_db or story_text_folder must be provided")
         
         
         if llm == 'openai':
@@ -33,6 +25,16 @@ class ChatHaruhi:
         else:
             print(f'warning! undefined llm {llm}, use openai instead.')
             self.llm, self.embedding, self.tokenizer = self.get_models('openai')
+
+        if story_db:
+            self.db = ChromaDB() 
+            self.db.load(story_db)
+        elif story_text_folder:
+            # print("Building story database from texts...")
+            self.db = self.build_story_db(story_text_folder) 
+        else:
+            raise ValueError("Either story_db or story_text_folder must be provided")
+        
 
         self.max_len_story, self.max_len_history = self.get_tokenlen_setting('openai')
 
