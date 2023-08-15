@@ -125,16 +125,18 @@ class ChatHaruhi:
 
         # add history
         self.add_history()
-
+                
+        # add query
+        self.llm.user_message(query)
+        
         # get response
         response = self.llm.get_response()
 
         # record dialogue history
         self.dialogue_history.append((query, response))
 
-        # add query
-        self.llm.user_message(query)
-        
+
+
         return response
     
     def get_query_string(self, text, role):
