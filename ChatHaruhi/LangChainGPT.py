@@ -27,7 +27,7 @@ class LangChainGPT(BaseLLM):
         self.messages.append(AIMessage(payload))
 
     def system_message(self, payload):
-        self.messages.append(SystemMessage(payload))
+        self.messages.append(SystemMessage(content = payload))
 
     def user_message(self, payload):
         self.messages.append(HumanMessage(payload))
