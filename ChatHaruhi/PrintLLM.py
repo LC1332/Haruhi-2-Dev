@@ -1,6 +1,6 @@
 # LangChainGPT.py
 
-from BaseLLM import BaseLLM
+from .BaseLLM import BaseLLM
 
 class PrintLLM(BaseLLM):
 

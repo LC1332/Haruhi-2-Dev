@@ -1,5 +1,5 @@
 import chromadb
-from BaseDB import BaseDB
+from .BaseDB import BaseDB
 import random
 import string
 import os

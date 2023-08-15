@@ -2,7 +2,7 @@
 
 from langchain.chat_models import ChatOpenAI
 from langchain.schema import AIMessage, UserMessage, SystemMessage
-from BaseLLM import BaseLLM
+from .BaseLLM import BaseLLM
 
 class LangChainGPT(BaseLLM):
 
