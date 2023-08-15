@@ -13,7 +13,7 @@ class ChatHaruhi:
                  verbose = False):
         
         self.verbose = verbose
-        
+
         self.system_prompt = system_prompt
 
         
@@ -150,6 +150,10 @@ class ChatHaruhi:
         self.llm.user_message(story_string)
         
     def add_history(self):
+
+        if len(self.dialogue_history) == 0:
+            return
+        
         sum_history_token = 0
         flag = 0
         for (query, response) in self.dialogue_history.reverse():
