@@ -17,6 +17,7 @@ from .BaseLLM import BaseLLM
 class LangChainGPT(BaseLLM):
 
     def __init__(self, model="gpt-3.5-turbo"):
+        super(LangChainGPT,self).__init__()
         self.chat = ChatOpenAI(model=model)
         self.messages = []
 
