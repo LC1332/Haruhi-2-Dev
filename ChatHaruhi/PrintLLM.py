@@ -11,6 +11,8 @@ class PrintLLM(BaseLLM):
 
     def initialize_message(self):
         self.messages = []
+        self.messages.append("Noticing: This is a print LLM for debug.")
+        self.messages.append("But you can also copy the prompt into GPT or Claude to debugging")
 
     def ai_message(self, payload):
         self.messages.append("AI: \n" + payload)
