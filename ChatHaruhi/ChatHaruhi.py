@@ -1,8 +1,8 @@
-from ChromaDB import ChromaDB
-from LangChainGPT import LangChainGPT
+from .ChromaDB import ChromaDB
+from .LangChainGPT import LangChainGPT
 import os
 
-from utils import luotuo_openai_embedding, tiktoken
+from .utils import luotuo_openai_embedding, tiktoken
 
 class ChatHaruhi:
 
