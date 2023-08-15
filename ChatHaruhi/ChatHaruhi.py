@@ -14,9 +14,8 @@ class ChatHaruhi:
         
         self.verbose = verbose
 
-        self.system_prompt = system_prompt
+        self.system_prompt = self.check_system_prompt( system_prompt )
 
-        
         
         if llm == 'openai':
             # self.llm = LangChainGPT()
@@ -56,6 +55,16 @@ class ChatHaruhi:
         self.dialogue_divide_token = '\n###\n'
         self.dialogue_bra_token = '「'
         self.dialogue_ket_token = '」'
+
+    def check_system_prompt(self, system_prompt):
+        # if system_prompt end with .txt, read the file with utf-8
+        # else, return the string directly
+        if system_prompt.endswith('.txt'):
+            with open(system_prompt, 'r', encoding='utf-8') as f:
+                return f.read()
+        else:
+            return system_prompt
+    
 
     def get_models(self, model_name):
         # return the combination of llm, embedding and tokenizer
@@ -122,6 +131,9 @@ class ChatHaruhi:
 
         # record dialogue history
         self.dialogue_history.append((query, response))
+
+        # add query
+        self.llm.user_message(query)
         
         return response
     
