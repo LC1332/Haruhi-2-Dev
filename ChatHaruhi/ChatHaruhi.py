@@ -11,7 +11,7 @@ class ChatHaruhi:
                  llm = 'openai', \
                  max_len_story = None, max_len_history = None,
                  verbose = False):
-        
+        super(ChatHaruhi, self).__init__()
         self.verbose = verbose
 
         self.system_prompt = self.check_system_prompt( system_prompt )
