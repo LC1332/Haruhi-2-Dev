@@ -30,7 +30,7 @@ class LangChainGPT(BaseLLM):
         self.messages.append(SystemMessage(payload))
 
     def user_message(self, payload):
-        self.messages.append(UserMessage(payload))
+        self.messages.append(HumanMessage(payload))
 
     def get_response(self):
         response = self.chat(self.messages)
