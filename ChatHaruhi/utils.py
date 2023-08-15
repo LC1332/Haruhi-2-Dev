@@ -15,7 +15,7 @@ _luotuo_model = None
 
 _enc_model = None
 
-def tiktoken( text ):
+def tiktokenizer( text ):
     global _enc_model
 
     if _enc_model is None:
