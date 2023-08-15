@@ -1,5 +1,3 @@
-from BaseLLM import BaseLLM 
-# from BaseDB import BaseDB
 from ChromaDB import ChromaDB
 from LangChainGPT import LangChainGPT
 import os
@@ -8,7 +6,10 @@ from utils import luotuo_openai_embedding, tiktoken
 
 class ChatHaruhi:
 
-    def __init__(self, system_prompt, story_db=None, story_text_folder = None, llm = 'openai', max_len_story = 1500, max_len_history = 1200):
+    def __init__(self, system_prompt, \
+                 story_db=None, story_text_folder = None, \
+                 llm = 'openai', \
+                 max_len_story = None, max_len_history = None):
 
         self.system_prompt = system_prompt
 
@@ -25,11 +26,23 @@ class ChatHaruhi:
         if llm == 'openai':
             # self.llm = LangChainGPT()
             self.llm, self.embedding, self.tokenizer = self.get_models('openai')
+        elif llm == 'debug':
+            from PrintLLM import PrintLLM
+            self.llm = PrintLLM()
+            _, self.embedding, self.tokenizer = self.get_models('openai')
         else:
             print(f'warning! undefined llm {llm}, use openai instead.')
             self.llm, self.embedding, self.tokenizer = self.get_models('openai')
 
         self.max_len_story, self.max_len_history = self.get_tokenlen_setting('openai')
+
+        if max_len_history is not None:
+            self.max_len_history = max_len_history
+            # user setting will override default setting
+
+        if max_len_story is not None:
+            self.max_len_story = max_len_story
+            # user setting will override default setting
 
         self.dialogue_history = []
 
