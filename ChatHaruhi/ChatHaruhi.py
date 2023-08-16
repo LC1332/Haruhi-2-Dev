@@ -123,7 +123,7 @@ class ChatHaruhi:
         # add system prompt
         self.llm.initialize_message()
         self.llm.system_message(self.system_prompt)
-        # TODO OpenAI版本此处报一个传参数数量的错
+    
 
         # add story
         query = self.get_query_string(text, role)
@@ -136,7 +136,7 @@ class ChatHaruhi:
         self.llm.user_message(query)
         
         # get response
-        response = self.llm.get_response()
+        response = self.llm.get_response().content
 
         # record dialogue history
         self.dialogue_history.append((query, response))
