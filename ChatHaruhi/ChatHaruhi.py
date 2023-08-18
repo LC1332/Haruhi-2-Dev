@@ -16,7 +16,7 @@ class ChatHaruhi:
 
         self.system_prompt = self.check_system_prompt( system_prompt )
 
-        
+        # TODO: embedding should be the seperately defined, so refactor this part later
         if llm == 'openai':
             # self.llm = LangChainGPT()
             self.llm, self.embedding, self.tokenizer = self.get_models('openai')
@@ -67,6 +67,9 @@ class ChatHaruhi:
     
 
     def get_models(self, model_name):
+
+        # TODO: if output only require tokenizer model, no need to initialize llm
+        
         # return the combination of llm, embedding and tokenizer
         if model_name == 'openai':
             return (LangChainGPT(), luotuo_openai_embedding, tiktokenizer)
