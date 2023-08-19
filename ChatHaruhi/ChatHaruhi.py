@@ -1,5 +1,6 @@
 from .ChromaDB import ChromaDB
 from .LangChainGPT import LangChainGPT
+from .SparkGPT import SparkGPT
 import os
 
 from .utils import luotuo_openai_embedding, tiktokenizer
@@ -22,6 +23,8 @@ class ChatHaruhi:
             self.llm, self.embedding, self.tokenizer = self.get_models('openai')
         elif llm == 'debug':
             self.llm, self.embedding, self.tokenizer = self.get_models( 'debug')
+        elif llm == 'spark':
+            self.llm, self.embedding, self.tokenizer = self.get_models( 'spark')
         else:
             print(f'warning! undefined llm {llm}, use openai instead.')
             self.llm, self.embedding, self.tokenizer = self.get_models('openai')
@@ -76,6 +79,8 @@ class ChatHaruhi:
         elif model_name == 'debug':
             from .PrintLLM import PrintLLM
             return (PrintLLM(), luotuo_openai_embedding, tiktokenizer)
+        elif model_name == 'spark':
+            return (SparkGPT(), luotuo_openai_embedding, tiktokenizer)
         else:
             print(f'warning! undefined model {model_name}, use openai instead.')
             return (LangChainGPT(), luotuo_openai_embedding, tiktokenizer)
@@ -139,7 +144,7 @@ class ChatHaruhi:
         self.llm.user_message(query)
         
         # get response
-        response = self.llm.get_response().content
+        response = self.llm.get_response()
 
         # record dialogue history
         self.dialogue_history.append((query, response))
