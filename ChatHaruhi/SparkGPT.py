@@ -1,5 +1,5 @@
 # SparkGPT.py
-import SparkApi
+import .SparkApi
 #以下密钥信息从控制台获取
 appid = "219faa1b"     #填写控制台中获取的 APPID 信息
 api_secret = "OWFmOTJhOTVmYWNkNWU4MGEwMzE3MmRj"   #填写控制台中获取的 APISecret 信息
