@@ -36,7 +36,9 @@ class ChatHaruhi:
             # print("Building story database from texts...")
             self.db = self.build_story_db(story_text_folder) 
         else:
-            raise ValueError("Either story_db or story_text_folder must be provided")
+            self.db = None
+            print('warning! database not yet figured out, both story_db and story_text_folder are not inputted.')
+            # raise ValueError("Either story_db or story_text_folder must be provided")
         
 
         self.max_len_story, self.max_len_history = self.get_tokenlen_setting('openai')
@@ -92,6 +94,11 @@ class ChatHaruhi:
         else:
             print(f'warning! undefined model {model_name}, use openai instead.')
             return (1500, 1200)
+        
+    def build_story_db_from_vec( self, texts, vecs ):
+        self.db = ChromaDB()
+
+        self.db.init_from_docs( vecs, texts)
 
     def build_story_db(self, text_folder):
         # 实现读取文本文件夹,抽取向量的逻辑
@@ -160,6 +167,10 @@ class ChatHaruhi:
             return f"{role}:{self.dialogue_bra_token}{text}{self.dialogue_ket_token}"
         
     def add_story(self, query):
+
+        if self.db is None:
+            return
+        
         query_vec = self.embedding(query)
 
         stories = self.db.search(query_vec, self.k_search)
