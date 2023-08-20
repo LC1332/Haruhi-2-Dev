@@ -1,9 +1,9 @@
 # SparkGPT.py
 from . import SparkApi
 #以下密钥信息从控制台获取
-appid = "219faa1b"     #填写控制台中获取的 APPID 信息
-api_secret = "OWFmOTJhOTVmYWNkNWU4MGEwMzE3MmRj"   #填写控制台中获取的 APISecret 信息
-api_key ="b01212368a9a141b05475cf9dd298f63"    #填写控制台中获取的 APIKey 信息
+appid = "219b"     #填写控制台中获取的 APPID 信息
+api_secret = "OWFmOTJhOTVwMzE3MmRj"   #填写控制台中获取的 APISecret 信息
+api_key ="b0121b05475cf9dd298f63"    #填写控制台中获取的 APIKey 信息
 
 
 from .BaseLLM import BaseLLM
