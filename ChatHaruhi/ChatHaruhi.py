@@ -197,8 +197,8 @@ class ChatHaruhi:
             print('warning! no history added. the last dialogue is too long.')
 
         for (query, response) in self.dialogue_history[-flag:]:
-            self.llm.ai_message(query)
-            self.llm.user_message(response)
+            self.llm.user_message(query)
+            self.llm.ai_message(response)
 
         
         
