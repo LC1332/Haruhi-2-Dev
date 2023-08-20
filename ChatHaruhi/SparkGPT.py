@@ -1,9 +1,9 @@
 # SparkGPT.py
 from . import SparkApi
 #以下密钥信息从控制台获取
-appid = "219fa"     #填写控制台中获取的 APPID 信息
-api_secret = "OWFmOTJhOTVmYWNk"   #填写控制台中获取的 APISecret 信息
-api_key ="b01212368a9a141"    #填写控制台中获取的 APIKey 信息
+appid = "219faa1b"     #填写控制台中获取的 APPID 信息
+api_secret = "OWFmOTJhOTVmYWNkNWU4MGEwMzE3MmRj"   #填写控制台中获取的 APISecret 信息
+api_key ="b01212368a9a141b05475cf9dd298f63"    #填写控制台中获取的 APIKey 信息
 
 
 from .BaseLLM import BaseLLM
@@ -24,20 +24,20 @@ class SparkGPT(BaseLLM):
         else:
             raise Exception("Unknown Spark model")
         # SparkApi.answer =""
-        self.messages = []
+        self.messages = ""
         
 
     def initialize_message(self):
-        self.messages = []
+        self.messages = ""
 
     def ai_message(self, payload):
-        self.messages.append(payload)
+        self.messages = self.messages + payload
 
     def system_message(self, payload):
-        self.messages.append(payload)
+        self.messages = self.messages + payload
 
     def user_message(self, payload):
-        self.messages.append(payload)
+        self.messages = self.messages + payload
 
     def get_response(self):
         SparkApi.answer =""
