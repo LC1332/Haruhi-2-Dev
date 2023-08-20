@@ -1,9 +1,11 @@
 # SparkGPT.py
 from . import SparkApi
-#以下密钥信息从控制台获取
-appid = "219b"     #填写控制台中获取的 APPID 信息
-api_secret = "OWFmOTJhOTVwMzE3MmRj"   #填写控制台中获取的 APISecret 信息
-api_key ="b0121b05475cf9dd298f63"    #填写控制台中获取的 APIKey 信息
+#以下密钥信息从os环境获取
+import os
+
+appid = os.environ['APPID']
+api_secret = os.environ['APISecret'] 
+api_key = os.environ['APIKey']
 
 
 from .BaseLLM import BaseLLM
@@ -24,26 +26,29 @@ class SparkGPT(BaseLLM):
         else:
             raise Exception("Unknown Spark model")
         # SparkApi.answer =""
-        self.messages = ""
+        self.messages = ''
         
 
     def initialize_message(self):
-        self.messages = ""
+        self.messages = ''
 
     def ai_message(self, payload):
-        self.messages = self.messages + payload
+        self.messages = self.messages + "AI: " + payload 
 
     def system_message(self, payload):
-        self.messages = self.messages + payload
+        self.messages = self.messages + "System: " + payload 
 
     def user_message(self, payload):
-        self.messages = self.messages + payload
+        self.messages = self.messages + "User: " + payload 
 
     def get_response(self):
+        # question = checklen(getText("user",Input))
+
+        message_json = [{"role": "user", "content": self.messages}]
         SparkApi.answer =""
-        SparkApi.main(appid,api_key,api_secret,self.Spark_url,self.domain,self.messages)
+        SparkApi.main(appid,api_key,api_secret,self.Spark_url,self.domain,message_json)
         return SparkApi.answer
     
     def print_prompt(self):
-        for message in self.messages:
-            print(message)
+        print(type(self.messages))
+        print(self.messages)
