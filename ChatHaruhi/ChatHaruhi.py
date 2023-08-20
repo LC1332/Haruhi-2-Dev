@@ -1,6 +1,5 @@
 from .ChromaDB import ChromaDB
 from .LangChainGPT import LangChainGPT
-from .SparkGPT import SparkGPT
 import os
 
 from .utils import luotuo_openai_embedding, tiktokenizer
@@ -24,6 +23,7 @@ class ChatHaruhi:
         elif llm == 'debug':
             self.llm, self.embedding, self.tokenizer = self.get_models( 'debug')
         elif llm == 'spark':
+            from .SparkGPT import SparkGPT
             self.llm, self.embedding, self.tokenizer = self.get_models( 'spark')
         else:
             print(f'warning! undefined llm {llm}, use openai instead.')
