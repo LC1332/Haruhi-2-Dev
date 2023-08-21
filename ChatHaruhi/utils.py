@@ -40,7 +40,7 @@ def response_postprocess(text,dialogue_bra_token = 'ã€Œ',dialogue_ket_token = 'ã
                 new_lines += (match.group(2))
             else:
                 if curr_name != first_name:
-                    return first_name + ":" + dialogue_bra_token +  + new_lines + dialogue_ket_token
+                    return first_name + ":" + dialogue_bra_token +  new_lines + dialogue_ket_token
                 else:
                     new_lines += (match.group(2))
             
@@ -48,7 +48,7 @@ def response_postprocess(text,dialogue_bra_token = 'ã€Œ',dialogue_ket_token = 'ã
             if first_name == None:
                 return text
             else:
-                return first_name + ":" + dialogue_bra_token +  + new_lines + dialogue_ket_token
+                return first_name + ":" + dialogue_bra_token +  new_lines + dialogue_ket_token
     return first_name + ":" + dialogue_bra_token + new_lines + dialogue_ket_token
 
 def download_models():
