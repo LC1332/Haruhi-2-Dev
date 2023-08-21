@@ -6,7 +6,8 @@ from .utils import luotuo_openai_embedding, tiktokenizer
 
 class ChatHaruhi:
 
-    def __init__(self, system_prompt, \
+    def __init__(self, system_prompt = None, \
+                 role_name = None, \
                  story_db=None, story_text_folder = None, \
                  llm = 'openai', \
                  max_len_story = None, max_len_history = None,
@@ -14,7 +15,8 @@ class ChatHaruhi:
         super(ChatHaruhi, self).__init__()
         self.verbose = verbose
 
-        self.system_prompt = self.check_system_prompt( system_prompt )
+        if system_prompt:
+            self.system_prompt = self.check_system_prompt( system_prompt )
 
         # TODO: embedding should be the seperately defined, so refactor this part later
         if llm == 'openai':
@@ -29,7 +31,27 @@ class ChatHaruhi:
             print(f'warning! undefined llm {llm}, use openai instead.')
             self.llm, self.embedding, self.tokenizer = self.get_models('openai')
 
-        if story_db:
+        if role_name:
+            unzip_folder = f'./temp_character_folder/temp_{role_name}'
+            db_folder = os.path.join(unzip_folder, f'content/{role_name}')
+            system_prompt = os.path.join(unzip_folder, f'content/system_prompt.txt')
+
+            if not os.path.exists(unzip_folder):
+                # not yet downloaded
+                url = f'https://github.com/LC1332/Haruhi-2-Dev/raw/main/data/character_in_zip/{role_name}.zip'
+                import requests, zipfile, io
+                r = requests.get(url)
+                z = zipfile.ZipFile(io.BytesIO(r.content))
+                z.extractall(unzip_folder)
+
+            if self.verbose:
+                print(f'loading pre-defined character {role_name}...')
+            
+            self.db = ChromaDB()
+            self.db.load(db_folder)
+            self.system_prompt = self.check_system_prompt(system_prompt)
+
+        elif story_db:
             self.db = ChromaDB() 
             self.db.load(story_db)
         elif story_text_folder:
