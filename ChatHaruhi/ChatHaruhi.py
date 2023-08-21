@@ -4,6 +4,8 @@ import os
 
 from .utils import luotuo_openai_embedding, tiktokenizer
 
+from .utils import response_postprocess
+
 class ChatHaruhi:
 
     def __init__(self, system_prompt = None, \
@@ -178,7 +180,9 @@ class ChatHaruhi:
         self.llm.user_message(query)
         
         # get response
-        response = self.llm.get_response()
+        response_raw = self.llm.get_response()
+
+        response = response_postprocess(response_raw, self.dialogue_bra_token, self.dialogue_ket_token)
 
         # record dialogue history
         self.dialogue_history.append((query, response))
