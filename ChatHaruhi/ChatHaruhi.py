@@ -32,13 +32,18 @@ class ChatHaruhi:
             self.llm, self.embedding, self.tokenizer = self.get_models('openai')
 
         if role_name:
+
+            from .role_name_to_file import get_folder_role_name
+            # correct role_name to folder_role_name
+            role_name, url = get_folder_role_name(role_name)
+
             unzip_folder = f'./temp_character_folder/temp_{role_name}'
             db_folder = os.path.join(unzip_folder, f'content/{role_name}')
             system_prompt = os.path.join(unzip_folder, f'content/system_prompt.txt')
 
             if not os.path.exists(unzip_folder):
                 # not yet downloaded
-                url = f'https://github.com/LC1332/Haruhi-2-Dev/raw/main/data/character_in_zip/{role_name}.zip'
+                # url = f'https://github.com/LC1332/Haruhi-2-Dev/raw/main/data/character_in_zip/{role_name}.zip'
                 import requests, zipfile, io
                 r = requests.get(url)
                 z = zipfile.ZipFile(io.BytesIO(r.content))
