@@ -6,7 +6,7 @@ import torch
 import random
 
 import tiktoken
-
+import re
 
 
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
@@ -23,6 +23,33 @@ def tiktokenizer( text ):
 
     return len(_enc_model.encode(text))
     
+def response_postprocess(text,dialogue_bra_token = '「',dialogue_ket_token = '」'):
+    lines = text.split('\n')
+    new_lines = ""
+
+    first_name = None
+
+    for line in lines:
+        match = re.match(r'^(.*?):' + dialogue_bra_token + r"(.*?)" + dialogue_ket_token + r"$", line)
+        
+        if match:
+            curr_name = match.group(1)
+            # print(curr_name)
+            if first_name is None:
+                first_name = curr_name
+                new_lines += (match.group(2))
+            else:
+                if curr_name != first_name:
+                    return first_name + ":" + dialogue_bra_token +  + new_lines + dialogue_ket_token
+                else:
+                    new_lines += (match.group(2))
+            
+        else:
+            if first_name == None:
+                return text
+            else:
+                return first_name + ":" + dialogue_bra_token +  + new_lines + dialogue_ket_token
+    return first_name + ":" + dialogue_bra_token +  + new_lines + dialogue_ket_token
 
 def download_models():
     print("正在下载Luotuo-Bert")
