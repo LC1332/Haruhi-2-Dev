@@ -27,7 +27,6 @@ class ChatHaruhi:
         elif llm == 'debug':
             self.llm, self.embedding, self.tokenizer = self.get_models( 'debug')
         elif llm == 'spark':
-            from .SparkGPT import SparkGPT
             self.llm, self.embedding, self.tokenizer = self.get_models( 'spark')
         else:
             print(f'warning! undefined llm {llm}, use openai instead.')
@@ -111,6 +110,7 @@ class ChatHaruhi:
             from .PrintLLM import PrintLLM
             return (PrintLLM(), luotuo_openai_embedding, tiktokenizer)
         elif model_name == 'spark':
+            from .SparkGPT import SparkGPT
             return (SparkGPT(), luotuo_openai_embedding, tiktokenizer)
         else:
             print(f'warning! undefined model {model_name}, use openai instead.')
