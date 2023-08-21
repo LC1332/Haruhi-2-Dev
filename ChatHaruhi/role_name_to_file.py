@@ -32,7 +32,7 @@ role_name_Haruhiu = {'汤师爷': 'tangshiye', 'tangshiye': 'tangshiye', 'Tangsh
 def get_folder_role_name(role_name):
     if role_name in role_name_Haruhiu:
         folder_role_name = role_name_Haruhiu[role_name]
-        url = f'https://github.com/LC1332/Haruhi-2-Dev/raw/main/data/character_in_zip/{role_name}.zip'
+        url = f'https://github.com/LC1332/Haruhi-2-Dev/raw/main/data/character_in_zip/{folder_role_name}.zip'
         return folder_role_name, url
     else:
         print('role_name {} not found, using haruhi as default'.format(role_name))
