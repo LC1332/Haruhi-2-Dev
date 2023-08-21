@@ -49,7 +49,7 @@ def response_postprocess(text,dialogue_bra_token = '「',dialogue_ket_token = '�
                 return text
             else:
                 return first_name + ":" + dialogue_bra_token +  + new_lines + dialogue_ket_token
-    return first_name + ":" + dialogue_bra_token +  + new_lines + dialogue_ket_token
+    return first_name + ":" + dialogue_bra_token + new_lines + dialogue_ket_token
 
 def download_models():
     print("正在下载Luotuo-Bert")
