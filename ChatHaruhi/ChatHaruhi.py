@@ -12,6 +12,7 @@ class ChatHaruhi:
                  role_name = None, \
                  story_db=None, story_text_folder = None, \
                  llm = 'openai', \
+                 embedding = 'luotuo_openai', \
                  max_len_story = None, max_len_history = None,
                  verbose = False):
         super(ChatHaruhi, self).__init__()
@@ -23,15 +24,21 @@ class ChatHaruhi:
         # TODO: embedding should be the seperately defined, so refactor this part later
         if llm == 'openai':
             # self.llm = LangChainGPT()
-            self.llm, self.embedding, self.tokenizer = self.get_models('openai')
+            self.llm, self.tokenizer = self.get_models('openai')
         elif llm == 'debug':
-            self.llm, self.embedding, self.tokenizer = self.get_models( 'debug')
+            self.llm, self.tokenizer = self.get_models( 'debug')
         elif llm == 'spark':
-            self.llm, self.embedding, self.tokenizer = self.get_models( 'spark')
+            self.llm, self.tokenizer = self.get_models( 'spark')
         else:
             print(f'warning! undefined llm {llm}, use openai instead.')
-            self.llm, self.embedding, self.tokenizer = self.get_models('openai')
+            self.llm, self.tokenizer = self.get_models('openai')
 
+        if embedding == 'luotuo_openai':
+            self.embedding = luotuo_openai_embedding
+        else:
+            print(f'warning! undefined embedding {embedding}, use luotuo_openai instead.')
+            self.embedding = luotuo_openai_embedding
+        
         if role_name:
 
             from .role_name_to_file import get_folder_role_name
@@ -105,16 +112,19 @@ class ChatHaruhi:
         
         # return the combination of llm, embedding and tokenizer
         if model_name == 'openai':
-            return (LangChainGPT(), luotuo_openai_embedding, tiktokenizer)
+            return (LangChainGPT(), tiktokenizer)
         elif model_name == 'debug':
             from .PrintLLM import PrintLLM
-            return (PrintLLM(), luotuo_openai_embedding, tiktokenizer)
+            return (PrintLLM(), tiktokenizer)
         elif model_name == 'spark':
             from .SparkGPT import SparkGPT
-            return (SparkGPT(), luotuo_openai_embedding, tiktokenizer)
+            return (SparkGPT(), tiktokenizer)
+        elif model_name == 'GLMPro':
+            from .GLMPro import GLMPro
+            return (GLMPro(), tiktokenizer)
         else:
             print(f'warning! undefined model {model_name}, use openai instead.')
-            return (LangChainGPT(), luotuo_openai_embedding, tiktokenizer)
+            return (LangChainGPT(), tiktokenizer)
         
     def get_tokenlen_setting( self, model_name ):
         # return the setting of story and history token length
