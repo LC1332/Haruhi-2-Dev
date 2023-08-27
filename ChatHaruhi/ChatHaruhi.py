@@ -28,6 +28,8 @@ class ChatHaruhi:
             self.llm, self.tokenizer = self.get_models( 'debug')
         elif llm == 'spark':
             self.llm, self.tokenizer = self.get_models( 'spark')
+        elif llm == 'GLMPro':
+            self.llm, self.tokenizer = self.get_models( 'GLMPro')
         else:
             print(f'warning! undefined llm {llm}, use openai instead.')
             self.llm, self.tokenizer = self.get_models('openai')
