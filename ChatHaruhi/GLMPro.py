@@ -76,7 +76,8 @@ class GLMPro( BaseLLM ):
                         return choices[-1]['content']
                     
                 # other wise means failed
-                print('get GLM response failed, retrying...')
+                if self.verbose == True:
+                    print('get GLM response failed, retrying...')
                 # sleep for 1 second
                 time.sleep( sleep_interval )
         else:
