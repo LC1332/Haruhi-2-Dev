@@ -7,14 +7,23 @@ import zhipuai
 import time
 
 class GLMPro( BaseLLM ):
-    def __init__(self, model="chatglm_pro"):
+    def __init__(self, model="chatglm_pro", verbose = False ):
         super(GLMPro,self).__init__()
 
         zhipuai.api_key = zhipu_api
 
+        self.verbose = verbose
+
         self.model_name = model
 
         self.prompts = []
+
+        if self.verbose == True:
+            print('model name, ', self.model_name )
+            if len( zhipu_api ) > 8:
+                print( 'found apikey ', zhipu_api[:4], '****', zhipu_api[-4:] )
+            else:
+                print( 'found apikey but too short, ' )
         
 
     def initialize_message(self):
@@ -36,6 +45,8 @@ class GLMPro( BaseLLM ):
 
         request_id = None
 
+        
+
         # try submit asychonize request until success
         for test_time in range( max_test_name ):
             response = zhipuai.model_api.async_invoke(
@@ -44,6 +55,9 @@ class GLMPro( BaseLLM ):
                 temperature = 0)
             if response['success'] == True:
                 request_id = response['data']['task_id']
+
+                if self.verbose == True:
+                    print('submit request, id = ', request_id )
                 break
             else:
                 print('submit GLM request failed, retrying...')
@@ -53,6 +67,10 @@ class GLMPro( BaseLLM ):
             for test_time in range( 2 * max_test_name ):
                 result = zhipuai.model_api.query_async_invoke_result( request_id )
                 if result['code'] == 200 and result['data']['task_status'] == 'SUCCESS':
+
+                    if self.verbose == True:
+                        print('get GLM response success' )
+
                     choices = result['data']['choices']
                     if len( choices ) > 0:
                         return choices[-1]['content']
