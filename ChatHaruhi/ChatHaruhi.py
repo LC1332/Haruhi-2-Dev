@@ -1,5 +1,4 @@
 from .ChromaDB import ChromaDB
-from .LangChainGPT import LangChainGPT
 import os
 
 from .utils import luotuo_openai_embedding, tiktokenizer
@@ -112,6 +111,7 @@ class ChatHaruhi:
         
         # return the combination of llm, embedding and tokenizer
         if model_name == 'openai':
+            from .LangChainGPT import LangChainGPT
             return (LangChainGPT(), tiktokenizer)
         elif model_name == 'debug':
             from .PrintLLM import PrintLLM
@@ -124,6 +124,7 @@ class ChatHaruhi:
             return (GLMPro(), tiktokenizer)
         else:
             print(f'warning! undefined model {model_name}, use openai instead.')
+            from .LangChainGPT import LangChainGPT
             return (LangChainGPT(), tiktokenizer)
         
     def get_tokenlen_setting( self, model_name ):
