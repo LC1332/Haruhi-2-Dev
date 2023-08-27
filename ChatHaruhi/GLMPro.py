@@ -32,7 +32,7 @@ class GLMPro( BaseLLM ):
     def get_response(self):
         zhipuai.api_key = zhipu_api
         max_test_name = 5
-        sleep_interval = 1
+        sleep_interval = 3
 
         request_id = None
 
