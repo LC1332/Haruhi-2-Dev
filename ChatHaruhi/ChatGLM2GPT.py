@@ -57,7 +57,7 @@ class ChatGLM2GPT(BaseLLM):
 
     def get_response(self):
         with torch.no_grad():
-            response, history = self.model.chat(self.tokenizer, input, history=[])
+            response, history = self.model.chat(self.tokenizer, self.messages, history=[])
             print(response)
         return response
         
