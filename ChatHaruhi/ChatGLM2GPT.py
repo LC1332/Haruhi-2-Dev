@@ -4,6 +4,30 @@ from peft import LoraConfig, get_peft_model
 from .BaseLLM import BaseLLM
 import torch 
 
+tokenizer_GLM = None
+model_GLM = None
+
+def initialize_GLM2LORA():
+    pass
+    global tokenizer_GLM
+    global model_GLM
+
+    tokenizer_GLM = AutoTokenizer.from_pretrained("THUDM/chatglm2-6b", trust_remote_code=True)
+    model_GLM = AutoModel.from_pretrained("THUDM/chatglm2-6b", trust_remote_code=True).half().cuda()
+
+    config = LoraConfig(
+        r=16,
+        lora_alpha=32,
+        inference_mode=True,
+        lora_dropout=0.05,
+        #bias="none",
+        task_type="CAUSAL_LM"
+    )
+
+    model_GLM = PeftModel.from_pretrained(model, "silk-road/Chat-Haruhi-Fusion_B")
+
+    return model_GLM, tokenizer_GLM
+
 class ChatGLM2GPT(BaseLLM):
     def __init__(self, model = "glm2-6b"):
         super(ChatGLM2GPT, self).__init__()
@@ -11,19 +35,7 @@ class ChatGLM2GPT(BaseLLM):
             self.tokenizer = AutoTokenizer.from_pretrained("THUDM/chatglm2-6b", trust_remote_code=True)
             self.model = AutoModel.from_pretrained("THUDM/chatglm2-6b", trust_remote_code=True).half().cuda()
         if model == "haruhi-fusion":
-            self.tokenizer = AutoTokenizer.from_pretrained("THUDM/chatglm2-6b", trust_remote_code=True)
-            self.model = AutoModel.from_pretrained("THUDM/chatglm2-6b", trust_remote_code=True).half().cuda()
-
-            config = LoraConfig(
-                r=16,
-                lora_alpha=32,
-                inference_mode=True,
-                lora_dropout=0.05,
-                #bias="none",
-                task_type="CAUSAL_LM"
-            )
-
-            self.model = PeftModel.from_pretrained(model, "silk-road/Chat-Haruhi-Fusion_B")
+            self.model, self.tokenizer = initialize_GLM2LORA()
         else:
             raise Exception("Unknown GLM model")
         self.messages = ""
