@@ -214,7 +214,7 @@ class ChatHaruhi:
     
     def get_query_string(self, text, role):
         if role in self.narrator:
-            return ":" + text
+            return role + ":" + text
         else:
             return f"{role}:{self.dialogue_bra_token}{text}{self.dialogue_ket_token}"
         
@@ -260,8 +260,10 @@ class ChatHaruhi:
             print('warning! no history added. the last dialogue is too long.')
 
         for (query, response) in self.dialogue_history[-flag:]:
-            self.llm.user_message(query)
-            self.llm.ai_message(response)
+            if query is not None:
+                self.llm.user_message(query)
+            if response is not None:
+                self.llm.ai_message(response)
 
         
         
