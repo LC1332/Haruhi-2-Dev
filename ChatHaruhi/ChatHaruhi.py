@@ -38,8 +38,8 @@ class ChatHaruhi:
             self.llm, self.tokenizer = self.get_models( 'spark')
         elif llm == 'GLMPro':
             self.llm, self.tokenizer = self.get_models( 'GLMPro')
-        elif llm == 'ChatGLMLora':
-            self.llm, self.tokenizer = self.get_models( 'ChatGLMLora')
+        elif llm == 'ChatGLM2GPT':
+            self.llm, self.tokenizer = self.get_models( 'ChatGLM2GPT')
             self.story_prefix_prompt = '\n'
         else:
             print(f'warning! undefined llm {llm}, use openai instead.')
