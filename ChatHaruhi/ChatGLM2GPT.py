@@ -1,6 +1,7 @@
 import os
 from transformers import AutoTokenizer, AutoModel
-from peft import LoraConfig, get_peft_model, PeftModel
+from peft import LoraConfig, get_peft_model
+from peft import PeftModel, PeftConfig
 from .BaseLLM import BaseLLM
 import torch 
 
