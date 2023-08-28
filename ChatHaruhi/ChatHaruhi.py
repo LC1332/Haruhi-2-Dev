@@ -130,8 +130,8 @@ class ChatHaruhi:
             from .GLMPro import GLMPro
             return (GLMPro(), tiktokenizer)
         elif model_name == "CHatGLM2GPT":
-            from .ChatGLM2GPT import ChatGLM2GPT
-            return (ChatGLM2GPT(), tiktokenizer)
+            from .ChatGLM2GPT import ChatGLM2GPT, GLM_tokenizer
+            return (ChatGLM2GPT(), GLM_tokenizer)
         else:
             print(f'warning! undefined model {model_name}, use openai instead.')
             from .LangChainGPT import LangChainGPT
