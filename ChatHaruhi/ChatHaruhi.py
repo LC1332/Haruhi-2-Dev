@@ -129,7 +129,7 @@ class ChatHaruhi:
         elif model_name == 'GLMPro':
             from .GLMPro import GLMPro
             return (GLMPro(), tiktokenizer)
-        elif model_name == "CHatGLM2GPT":
+        elif model_name == "ChatGLM2GPT":
             from .ChatGLM2GPT import ChatGLM2GPT, GLM_tokenizer
             return (ChatGLM2GPT(), GLM_tokenizer)
         else:
