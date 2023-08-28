@@ -25,7 +25,7 @@ def initialize_GLM2LORA():
         task_type="CAUSAL_LM"
     )
 
-    model_GLM = PeftModel.from_pretrained(model, "silk-road/Chat-Haruhi-Fusion_B")
+    model_GLM = PeftModel.from_pretrained(model_GLM, "silk-road/Chat-Haruhi-Fusion_B")
     return model_GLM, tokenizer_GLM
 
 def GLM_tokenizer(text):
