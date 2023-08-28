@@ -248,8 +248,9 @@ class ChatHaruhi:
         sum_history_token = 0
         flag = 0
         for query, response in reversed(self.dialogue_history):
+            current_count = 0
             if query is not None:
-                current_count = self.tokenizer(query) 
+                current_count += self.tokenizer(query) 
             if response is not None:
                 current_count += self.tokenizer(response)
             sum_history_token += current_count
