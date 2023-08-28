@@ -28,7 +28,7 @@ def initialize_GLM2LORA():
     return model_GLM, tokenizer_GLM
 
 class ChatGLM2GPT(BaseLLM):
-    def __init__(self, model = "glm2-6b"):
+    def __init__(self, model = "haruhi-fusion"):
         super(ChatGLM2GPT, self).__init__()
         if model == "glm2-6b":
             self.tokenizer = AutoTokenizer.from_pretrained("THUDM/chatglm2-6b", trust_remote_code=True)
@@ -60,3 +60,5 @@ class ChatGLM2GPT(BaseLLM):
         print(type(self.messages))
         print(self.messages)
 
+    def GLM_tokenizer(text):
+        return len(tokenizer_GLM.encode(text))
