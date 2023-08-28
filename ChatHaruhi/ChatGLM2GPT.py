@@ -27,6 +27,9 @@ def initialize_GLM2LORA():
     model_GLM = PeftModel.from_pretrained(model, "silk-road/Chat-Haruhi-Fusion_B")
     return model_GLM, tokenizer_GLM
 
+def GLM_tokenizer(text):
+    return len(tokenizer_GLM.encode(text))
+
 class ChatGLM2GPT(BaseLLM):
     def __init__(self, model = "haruhi-fusion"):
         super(ChatGLM2GPT, self).__init__()
@@ -60,5 +63,4 @@ class ChatGLM2GPT(BaseLLM):
         print(type(self.messages))
         print(self.messages)
 
-    def GLM_tokenizer(text):
-        return len(tokenizer_GLM.encode(text))
+    
