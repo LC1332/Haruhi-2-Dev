@@ -17,16 +17,16 @@ def initialize_GLM2LORA():
         tokenizer_GLM = AutoTokenizer.from_pretrained("THUDM/chatglm2-6b", trust_remote_code=True)
         model_GLM = AutoModel.from_pretrained("THUDM/chatglm2-6b", trust_remote_code=True).half().cuda()
 
-    config = LoraConfig(
-        r=16,
-        lora_alpha=32,
-        inference_mode=True,
-        lora_dropout=0.05,
-        #bias="none",
-        task_type="CAUSAL_LM"
-    )
+        config = LoraConfig(
+            r=16,
+            lora_alpha=32,
+            inference_mode=True,
+            lora_dropout=0.05,
+            #bias="none",
+            task_type="CAUSAL_LM"
+        )
 
-    model_GLM = PeftModel.from_pretrained(model_GLM, "silk-road/Chat-Haruhi-Fusion_B")
+        model_GLM = PeftModel.from_pretrained(model_GLM, "silk-road/Chat-Haruhi-Fusion_B")
     return model_GLM, tokenizer_GLM
 
 def GLM_tokenizer(text):
