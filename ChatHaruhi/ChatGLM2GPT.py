@@ -25,7 +25,6 @@ def initialize_GLM2LORA():
     )
 
     model_GLM = PeftModel.from_pretrained(model, "silk-road/Chat-Haruhi-Fusion_B")
-
     return model_GLM, tokenizer_GLM
 
 class ChatGLM2GPT(BaseLLM):
