@@ -13,8 +13,9 @@ def initialize_GLM2LORA():
     global tokenizer_GLM
     global model_GLM
 
-    tokenizer_GLM = AutoTokenizer.from_pretrained("THUDM/chatglm2-6b", trust_remote_code=True)
-    model_GLM = AutoModel.from_pretrained("THUDM/chatglm2-6b", trust_remote_code=True).half().cuda()
+    if tokenizer_GLM == None and model_GLM == None:
+        tokenizer_GLM = AutoTokenizer.from_pretrained("THUDM/chatglm2-6b", trust_remote_code=True)
+        model_GLM = AutoModel.from_pretrained("THUDM/chatglm2-6b", trust_remote_code=True).half().cuda()
 
     config = LoraConfig(
         r=16,
@@ -58,7 +59,7 @@ class ChatGLM2GPT(BaseLLM):
     def get_response(self):
         with torch.no_grad():
             response, history = self.model.chat(self.tokenizer, self.messages, history=[])
-            print(response)
+            # print(response)
         return response
         
     def print_prompt(self):
