@@ -73,7 +73,7 @@ class GLMPro( BaseLLM ):
 
                     choices = result['data']['choices']
                     if len( choices ) > 0:
-                        return choices[-1]['content']
+                        return choices[-1]['content'].strip("\"'")
                     
                 # other wise means failed
                 if self.verbose == True:
