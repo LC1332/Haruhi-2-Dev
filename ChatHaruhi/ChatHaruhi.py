@@ -17,6 +17,14 @@ class ChatHaruhi:
         super(ChatHaruhi, self).__init__()
         self.verbose = verbose
 
+        # constants
+        self.story_prefix_prompt = "Classic scenes for the role are as follows:\n"
+        self.k_search = 19
+        self.narrator = ['旁白', '', 'scene','Scene','narrator' , 'Narrator']
+        self.dialogue_divide_token = '\n###\n'
+        self.dialogue_bra_token = '「'
+        self.dialogue_ket_token = '」'
+
         if system_prompt:
             self.system_prompt = self.check_system_prompt( system_prompt )
 
@@ -30,6 +38,9 @@ class ChatHaruhi:
             self.llm, self.tokenizer = self.get_models( 'spark')
         elif llm == 'GLMPro':
             self.llm, self.tokenizer = self.get_models( 'GLMPro')
+        elif llm == 'ChatGLMLora':
+            self.llm, self.tokenizer = self.get_models( 'ChatGLMLora')
+            self.story_prefix_prompt = '\n'
         else:
             print(f'warning! undefined llm {llm}, use openai instead.')
             self.llm, self.tokenizer = self.get_models('openai')
@@ -89,13 +100,7 @@ class ChatHaruhi:
 
         self.dialogue_history = []
 
-        # constants
-        self.story_prefix_prompt = "Classic scenes for the role are as follows:\n"
-        self.k_search = 19
-        self.narrator = ['旁白', '', 'scene','Scene','narrator' , 'Narrator']
-        self.dialogue_divide_token = '\n###\n'
-        self.dialogue_bra_token = '「'
-        self.dialogue_ket_token = '」'
+        
 
     def check_system_prompt(self, system_prompt):
         # if system_prompt end with .txt, read the file with utf-8

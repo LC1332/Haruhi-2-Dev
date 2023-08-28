@@ -13,6 +13,9 @@ device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
 _luotuo_model = None
 
+_luotuo_model_en = None
+_luotuo_en_tokenizer = None
+
 _enc_model = None
 
 def tiktokenizer( text ):
@@ -77,6 +80,26 @@ def luotuo_embedding(model, texts):
     # Get the embeddings
     with torch.no_grad():
         embeddings = model(**inputs, output_hidden_states=True, return_dict=True, sent_emb=True).pooler_output
+    return embeddings
+
+def luotuo_en_embedding( texts ):
+    # this function implemented by Cheng
+    global _luotuo_model_en
+    global _luotuo_en_tokenizer
+
+    if _luotuo_model_en is None:
+        _luotuo_en_tokenizer = AutoTokenizer.from_pretrained("silk-road/luotuo-bert-en")
+        _luotuo_model_en = AutoModel.from_pretrained("silk-road/luotuo-bert-en").to(device)
+
+    if _luotuo_en_tokenizer is None:
+        _luotuo_en_tokenizer = AutoTokenizer.from_pretrained("silk-road/luotuo-bert-en")
+
+    inputs = _luotuo_en_tokenizer(texts, padding=True, truncation=False, return_tensors="pt")
+    inputs = inputs.to(device)
+
+    with torch.no_grad():
+        embeddings = _luotuo_model_en(**inputs, output_hidden_states=True, return_dict=True, sent_emb=True).pooler_output
+        
     return embeddings
 
 
