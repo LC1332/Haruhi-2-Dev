@@ -61,6 +61,7 @@ class GLMPro( BaseLLM ):
                 break
             else:
                 print('submit GLM request failed, retrying...')
+                time.sleep( sleep_interval )
 
         if request_id:
             # try get response until success
