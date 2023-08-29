@@ -33,6 +33,7 @@ def response_postprocess(text,dialogue_bra_token = 'ã€Œ',dialogue_ket_token = 'ã
     first_name = None
 
     for line in lines:
+        line = line.strip(" ")
         match = re.match(r'^(.*?):' + dialogue_bra_token + r"(.*?)" + dialogue_ket_token + r"$", line)
         
         if match:
