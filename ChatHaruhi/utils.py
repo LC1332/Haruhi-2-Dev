@@ -34,7 +34,8 @@ def response_postprocess(text,dialogue_bra_token = '「',dialogue_ket_token = '�
 
     for line in lines:
         line = line.strip(" ")
-        match = re.match(r'^(.*?):' + dialogue_bra_token + r"(.*?)" + dialogue_ket_token + r"$", line)
+        match = re.match(r'^(.*?)[: ：]' + dialogue_bra_token + r"(.*?)" + dialogue_ket_token + r"$", line)
+
         
         if match:
             curr_name = match.group(1)
