@@ -143,11 +143,46 @@ elif model_name == "ChatGLM2GPT": # 通过ChatHaruhi-54K训练得到的模型
 
 ## ChatHaruhi Gradio 2.0的部署
 
-现在Gradio的部署可以
-
-
+现在Gradio的部署非常简单，代码在 https://github.com/LC1332/Chat-Haruhi-Suzumiya/tree/main/ChatHaruhi2.0/gradioDemo 中
 
 ## 目前支持的角色
+
+目前role_name支持的角色可以在role_name_to_file中看到。目前是支持这些
+
+```python
+
+role_name_Haruhiu = {'汤师爷': 'tangshiye', 'tangshiye': 'tangshiye', 'Tangshiye': 'tangshiye', 
+                     '慕容复': 'murongfu', 'murongfu': 'murongfu', 'Murongfu': 'murongfu', 
+                     '李云龙': 'liyunlong', 'liyunlong': 'liyunlong', 'Liyunlong': 'liyunlong', 
+                     'Luna': 'Luna', '王多鱼': 'wangduoyu', 'wangduoyu': 'wangduoyu', 
+                     'Wangduoyu': 'wangduoyu', 'Ron': 'Ron', '鸠摩智': 'jiumozhi', 
+                     'jiumozhi': 'jiumozhi', 'Jiumozhi': 'jiumozhi', 'Snape': 'Snape', 
+                     '凉宫春日': 'haruhi', 'haruhi': 'haruhi', 'Haruhi': 'haruhi', 
+                     'Malfoy': 'Malfoy', '虚竹': 'xuzhu', 'xuzhu': 'xuzhu', 
+                     'Xuzhu': 'xuzhu', '萧峰': 'xiaofeng', 
+                     'xiaofeng': 'xiaofeng', 'Xiaofeng': 'xiaofeng', '段誉': 'duanyu', 
+                     'duanyu': 'duanyu', 'Duanyu': 'duanyu', 'Hermione': 'Hermione', 
+                     'Dumbledore': 'Dumbledore', '王语嫣': 'wangyuyan', 'wangyuyan': 
+                     'wangyuyan', 'Wangyuyan': 'wangyuyan', 'Harry': 'Harry', 
+                     'McGonagall': 'McGonagall', '白展堂': 'baizhantang', 
+                     'baizhantang': 'baizhantang', 'Baizhantang': 'baizhantang', 
+                     '佟湘玉': 'tongxiangyu', 'tongxiangyu': 'tongxiangyu', 
+                     'Tongxiangyu': 'tongxiangyu', '郭芙蓉': 'guofurong', 
+                     'guofurong': 'guofurong', 'Guofurong': 'guofurong', '流浪者': 'wanderer', 
+                     'wanderer': 'wanderer', 'Wanderer': 'wanderer', '钟离': 'zhongli', 
+                     'zhongli': 'zhongli', 'Zhongli': 'zhongli', '胡桃': 'hutao', 'hutao': 'hutao', 
+                     'Hutao': 'hutao', 'Sheldon': 'Sheldon', 'Raj': 'Raj', 
+                     'Penny': 'Penny', '韦小宝': 'weixiaobao', 'weixiaobao': 'weixiaobao', 
+                     'Weixiaobao': 'weixiaobao', '乔峰': 'qiaofeng', 'qiaofeng': 'qiaofeng', 
+                     'Qiaofeng': 'qiaofeng', '神里绫华': 'ayaka', 'ayaka': 'ayaka', 
+                     'Ayaka': 'ayaka', '雷电将军': 'raidenShogun', 'raidenShogun': 'raidenShogun', 
+                     'RaidenShogun': 'raidenShogun', '于谦': 'yuqian', 'yuqian': 'yuqian', 
+                     'Yuqian': 'yuqian', 'Professor McGonagall': 'McGonagall', 
+                     'Professor Dumbledore': 'Dumbledore'}
+
+```
+
+新角色我打算做到hugging face接口上去了，那样可玩性会强一些。
 
 ## Embedding模型
 
