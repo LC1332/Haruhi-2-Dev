@@ -119,7 +119,27 @@ print(response)
 
 ## 不同LLM的支持
 
+目前支持llm切换为不同的模型。目前支持这些模型
 
+```python
+if model_name == 'openai': # openai turbo 3.5 模型
+    from .LangChainGPT import LangChainGPT
+    return (LangChainGPT(), tiktokenizer)
+elif model_name == 'debug': # 用于debug，直接打印出prompt的模型（甚至你可以输入回去表现出正常的行为）
+    from .PrintLLM import PrintLLM
+    return (PrintLLM(), tiktokenizer)
+elif model_name == 'spark': # 星火大模型
+    from .SparkGPT import SparkGPT
+    return (SparkGPT(), tiktokenizer)
+elif model_name == 'GLMPro': # GLMPro的在线接口
+    from .GLMPro import GLMPro
+    return (GLMPro(), tiktokenizer)
+elif model_name == "ChatGLM2GPT": # 通过ChatHaruhi-54K训练得到的模型
+    from .ChatGLM2GPT import ChatGLM2GPT, GLM_tokenizer
+    return (ChatGLM2GPT(), GLM_tokenizer)
+```
+
+现在ChatGLM2的本地模型还有一些bug。正在调试中，百川我们也训练了。有空回头推上去。
 
 ## ChatHaruhi Gradio 2.0的部署
 
