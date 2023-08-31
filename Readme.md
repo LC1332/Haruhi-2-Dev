@@ -184,9 +184,32 @@ role_name_Haruhiu = {'汤师爷': 'tangshiye', 'tangshiye': 'tangshiye', 'Tangsh
 
 新角色我打算做到hugging face接口上去了，那样可玩性会强一些。
 
-## Embedding模型
 
 ## 改变ChatBot的记忆
+
+现在暂时没有暴露这个接口，可以用强行赋值的方法，在chat之前改变chatbot的记忆
+
+
+```python
+from chatharuhi import ChatHaruhi
+
+chatbot = ChatHaruhi( role_name = 'haruhi',\
+                      llm = 'openai' )
+
+chatbot.dialogue_history = [('鲁鲁:「Haruhi，我是新同学鲁鲁」','春日:「你好呀鲁鲁」')]
+
+response = chatbot.chat(role='阿虚', text = '这个新同学是什么来头')
+print(response)
+```
+
+不然chatbot会自己把记忆存储在`chatbot.dialogue_history = []`中。
+
+dialogue_history是一个list of tuple，分别是格式化的user的query和bot的response，也可以是None
+
+None的话，这一行就不会放到记忆里，所以可以去构造单独bot的或者单独user的记忆。
+
+## Embedding模型
+
 
 ## 后处理
 
