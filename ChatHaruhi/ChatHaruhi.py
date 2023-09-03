@@ -8,7 +8,7 @@ from .utils import response_postprocess
 class ChatHaruhi:
 
     def __init__(self, system_prompt = None, \
-                 role_name = None, \
+                 role_name = None, role_from_hf = None, \
                  story_db=None, story_text_folder = None, \
                  llm = 'openai', \
                  embedding = 'luotuo_openai', \
@@ -52,7 +52,7 @@ class ChatHaruhi:
             self.embedding = luotuo_openai_embedding
         
         if role_name:
-
+            # TODO move into a function
             from .role_name_to_file import get_folder_role_name
             # correct role_name to folder_role_name
             role_name, url = get_folder_role_name(role_name)
@@ -75,7 +75,29 @@ class ChatHaruhi:
             self.db = ChromaDB()
             self.db.load(db_folder)
             self.system_prompt = self.check_system_prompt(system_prompt)
+        elif role_from_hf:
+            # TODO move into a function
+            from datasets import load_dataset
+            dataset = load_dataset(role_from_hf)
+            datas = dataset["train"]
+            from .utils import base64_to_float_array
+            # 暂时只有一种embedding 'luotuo_openai'
+            embed_name = 'luotuo_openai'
+            texts = []
+            vecs = []
+            for data in datas:
+                if data[embed_name] == 'system_prompt':
+                    self.system_prompt = data['text']
+                elif data[embed_name] == 'config':
+                    pass
+                else:
+                    vec = base64_to_float_array( data[embed_name] )
+                    text = data['text']
+                    vecs.append( vec )
+                    texts.append( text )
 
+            self.build_story_db_from_vec( texts, vecs )
+            
         elif story_db:
             self.db = ChromaDB() 
             self.db.load(story_db)
