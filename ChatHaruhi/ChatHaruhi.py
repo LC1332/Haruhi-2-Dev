@@ -33,14 +33,16 @@ class ChatHaruhi:
             # self.llm = LangChainGPT()
             self.llm, self.tokenizer = self.get_models('openai')
         elif llm == 'debug':
-            self.llm, self.tokenizer = self.get_models( 'debug')
+            self.llm, self.tokenizer = self.get_models('debug')
         elif llm == 'spark':
-            self.llm, self.tokenizer = self.get_models( 'spark')
+            self.llm, self.tokenizer = self.get_models('spark')
         elif llm == 'GLMPro':
-            self.llm, self.tokenizer = self.get_models( 'GLMPro')
+            self.llm, self.tokenizer = self.get_models('GLMPro')
         elif llm == 'ChatGLM2GPT':
-            self.llm, self.tokenizer = self.get_models( 'ChatGLM2GPT')
+            self.llm, self.tokenizer = self.get_models('ChatGLM2GPT')
             self.story_prefix_prompt = '\n'
+        elif llm == "BaiChuan2GPT":
+            self.llm, self.tokenizer = self.get_models('BaiChuan2GPT')
         else:
             print(f'warning! undefined llm {llm}, use openai instead.')
             self.llm, self.tokenizer = self.get_models('openai')
@@ -154,6 +156,9 @@ class ChatHaruhi:
         elif model_name == "ChatGLM2GPT":
             from .ChatGLM2GPT import ChatGLM2GPT, GLM_tokenizer
             return (ChatGLM2GPT(), GLM_tokenizer)
+        elif model_name == "BaiChuan2GPT":
+            from .BaiChuan2GPT import BaiChuan2GPT, BaiChuan_tokenizer
+            return (BaiChuan2GPT(), BaiChuan_tokenizer)
         else:
             print(f'warning! undefined model {model_name}, use openai instead.')
             from .LangChainGPT import LangChainGPT
@@ -289,6 +294,3 @@ class ChatHaruhi:
                 self.llm.user_message(query)
             if response is not None:
                 self.llm.ai_message(response)
-
-        
-        

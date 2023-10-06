@@ -1,32 +1,33 @@
-import os
-from transformers import AutoTokenizer, AutoModel
-from peft import LoraConfig, get_peft_model
-from peft import PeftModel, PeftConfig
-from .BaseLLM import BaseLLM
 import torch 
+from .BaseLLM import BaseLLM
+from transformers import AutoTokenizer, AutoModel
+from peft import PeftModel
 
 tokenizer_GLM = None
 model_GLM = None
 
 def initialize_GLM2LORA():
-    pass
-    global tokenizer_GLM
-    global model_GLM
+    global model_GLM, tokenizer_GLM
 
-    if tokenizer_GLM == None and model_GLM == None:
-        tokenizer_GLM = AutoTokenizer.from_pretrained("THUDM/chatglm2-6b", trust_remote_code=True)
-        model_GLM = AutoModel.from_pretrained("THUDM/chatglm2-6b", trust_remote_code=True).half().cuda()
-
-        config = LoraConfig(
-            r=16,
-            lora_alpha=32,
-            inference_mode=True,
-            lora_dropout=0.05,
-            #bias="none",
-            task_type="CAUSAL_LM"
+    if model_GLM is None:
+        model_GLM = AutoModel.from_pretrained(
+            "THUDM/chatglm2-6b",
+            torch_dtype=torch.float16,
+            device_map="auto",
+            trust_remote_code=True
+        )
+        model_GLM = PeftModel.from_pretrained(
+            model_GLM,
+            "silk-road/Chat-Haruhi-Fusion_B"
         )
 
-        model_GLM = PeftModel.from_pretrained(model_GLM, "silk-road/Chat-Haruhi-Fusion_B")
+    if tokenizer_GLM is None:
+        tokenizer_GLM = AutoTokenizer.from_pretrained(
+            "THUDM/chatglm2-6b", 
+            use_fast=True,
+            trust_remote_code=True
+        )
+
     return model_GLM, tokenizer_GLM
 
 def GLM_tokenizer(text):
@@ -36,8 +37,17 @@ class ChatGLM2GPT(BaseLLM):
     def __init__(self, model = "haruhi-fusion"):
         super(ChatGLM2GPT, self).__init__()
         if model == "glm2-6b":
-            self.tokenizer = AutoTokenizer.from_pretrained("THUDM/chatglm2-6b", trust_remote_code=True)
-            self.model = AutoModel.from_pretrained("THUDM/chatglm2-6b", trust_remote_code=True).half().cuda()
+            self.tokenizer = AutoTokenizer.from_pretrained(
+                "THUDM/chatglm2-6b", 
+                use_fast=True,
+                trust_remote_code=True
+            )
+            self.model = AutoModel.from_pretrained(
+                "THUDM/chatglm2-6b",
+                torch_dtype=torch.float16,
+                device_map="auto",
+                trust_remote_code=True
+            )
         if model == "haruhi-fusion":
             self.model, self.tokenizer = initialize_GLM2LORA()
         else:
