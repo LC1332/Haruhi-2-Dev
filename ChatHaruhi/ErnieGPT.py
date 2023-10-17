@@ -6,7 +6,9 @@ import os
 # appid = os.environ['APPID']
 # api_secret = os.environ['APISecret'] 
 # api_key = os.environ['APIKey']
+erniebot.api_type = os.environ["APIType"]
 erniebot.access_token = os.environ["ErnieAccess"]
+
 
 from .BaseLLM import BaseLLM
 
@@ -15,30 +17,39 @@ from .BaseLLM import BaseLLM
 
 class ErnieGPT(BaseLLM):
 
-    def __init__(self,model="ernie-bot",api_type="aistudio"):
+    def __init__(self,model="ernie-bot"):
         super(ErnieGPT,self).__init__()
         if model not in ["ernie-bot", "ernie-bot-turbo", "ernie-vilg-v2", "ernie-text-embedding"]:
             raise Exception("Unknown Ernie model")
         # SparkApi.answer =""
-        self.messages = ""
-        erniebot.api_type = api_type
+        self.messages = []
         
 
     def initialize_message(self):
-        self.messages = ""
+        self.messages = []
 
     def ai_message(self, payload):
-        self.messages = self.messages + "AI: " + payload  
+        if len(self.messages) == 0:
+            self.user_message("请根据我的要求进行角色扮演:")
+        elif len(self.messages) % 2 == 1:
+            self.messages.append({"role":"assistant","content":payload})
+        elif len(self.messages)% 2 == 0:
+            self.messages[-1]["content"] += "\n"+ payload
 
     def system_message(self, payload):
-        self.messages = self.messages + "System: " + payload 
+        
+        self.messages.append({"role":"user","content":payload}) 
+        
 
     def user_message(self, payload):
-        self.messages = self.messages + "User: " + payload  
+        if len(self.messages) % 2 == 0:
+            self.messages.append({"role":"user","content":payload})
+        elif len(self.messages)% 2 == 1:
+            self.messages[-1]["content"] += "\n"+ payload
 
     def get_response(self):
         # question = checklen(getText("user",Input))
-        response = erniebot.ChatCompletion.create(model='ernie-bot', messages=[{"role": "user", "content": self.messages}])
+        response = erniebot.ChatCompletion.create(model='ernie-bot', messages=self.messages)
         # message_json = [{"role": "user", "content": self.messages}]
         # SparkApi.answer =""
         # SparkApi.main(appid,api_key,api_secret,self.Spark_url,self.domain,message_json)
