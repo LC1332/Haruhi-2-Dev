@@ -20,12 +20,12 @@ class ErnieGPT(BaseLLM):
         if model not in ["ernie-bot", "ernie-bot-turbo", "ernie-vilg-v2", "ernie-text-embedding"]:
             raise Exception("Unknown Ernie model")
         # SparkApi.answer =""
-        self.messages = []
+        self.messages = ""
         erniebot.api_type = api_type
         
 
     def initialize_message(self):
-        self.messages = []
+        self.messages = ""
 
     def ai_message(self, payload):
         self.messages = self.messages + "AI: " + payload  
