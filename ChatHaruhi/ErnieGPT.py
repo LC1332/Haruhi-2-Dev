@@ -2,6 +2,7 @@
 import erniebot 
 #以下密钥信息从os环境获取
 import os
+import copy
 
 # appid = os.environ['APPID']
 # api_secret = os.environ['APISecret'] 
@@ -44,12 +45,18 @@ class ErnieGPT(BaseLLM):
     def user_message(self, payload):
         if len(self.messages) % 2 == 0:
             self.messages.append({"role":"user","content":payload})
+            # self.messages[-1]["content"] += 
         elif len(self.messages)% 2 == 1:
             self.messages[-1]["content"] += "\n"+ payload
 
     def get_response(self):
         # question = checklen(getText("user",Input))
-        response = erniebot.ChatCompletion.create(model='ernie-bot', messages=self.messages)
+        chat_messages = copy.deepcopy(self.messages)
+        lines = chat_messages[-1]["content"].split('\n')
+        lines.insert(-1, '请请模仿上述经典桥段进行回复\n')
+        chat_messages[-1]["content"] = '\n'.join(lines)
+        # chat_messages[-1]["content"] = "请请模仿上述经典桥段进行回复\n" + chat_messages[-1]["content"] 
+        response = erniebot.ChatCompletion.create(model='ernie-bot', messages=chat_messages)
         # message_json = [{"role": "user", "content": self.messages}]
         # SparkApi.answer =""
         # SparkApi.main(appid,api_key,api_secret,self.Spark_url,self.domain,message_json)
