@@ -43,6 +43,8 @@ class ChatHaruhi:
             self.story_prefix_prompt = '\n'
         elif llm == "BaiChuan2GPT":
             self.llm, self.tokenizer = self.get_models('BaiChuan2GPT')
+        elif llm == "ernie":
+            self.llm, self.tokenizer = self.get_models('ernie')
         else:
             print(f'warning! undefined llm {llm}, use openai instead.')
             self.llm, self.tokenizer = self.get_models('openai')
@@ -153,6 +155,9 @@ class ChatHaruhi:
         elif model_name == 'GLMPro':
             from .GLMPro import GLMPro
             return (GLMPro(), tiktokenizer)
+        elif model_name == 'ernie':
+            from .ErnieGPT import ErnieGPT
+            return (ErnieGPT(), tiktokenizer)
         elif model_name == "ChatGLM2GPT":
             from .ChatGLM2GPT import ChatGLM2GPT, GLM_tokenizer
             return (ChatGLM2GPT(), GLM_tokenizer)
