@@ -88,6 +88,67 @@ _luotuo_en_tokenizer = None
 
 _enc_model = None
 
+# ======== add bge model
+# by Cheng Li
+# for English only right now
+
+_bge_model = None
+_bge_tokenizer = None
+
+def get_bge_embeddings( sentences ):
+    # unsafe ensure batch size by yourself
+
+    global _bge_model
+    global _bge_tokenizer
+
+    if _bge_model is None:
+        from transformers import AutoTokenizer, AutoModel
+        _bge_tokenizer = AutoTokenizer.from_pretrained('BAAI/bge-small-en-v1.5')
+        _bge_model = AutoModel.from_pretrained('BAAI/bge-small-en-v1.5')
+
+    _bge_model.eval()
+
+    # Tokenize sentences
+    encoded_input = _bge_tokenizer(sentences, padding=True, truncation=True, return_tensors='pt', max_length = 512)
+
+    # Compute token embeddings
+    with torch.no_grad():
+        model_output = _bge_model(**encoded_input)
+        # Perform pooling. In this case, cls pooling.
+        sentence_embeddings = model_output[0][:, 0]
+    # normalize embeddings
+    sentence_embeddings = torch.nn.functional.normalize(sentence_embeddings, p=2, dim=1)
+    return sentence_embeddings.cpu().tolist()
+
+def get_bge_embedding( text_or_texts ):
+    if isinstance(text_or_texts, str):
+        return get_bge_embeddings([text_or_texts])[0]
+    else:
+        return get_bge_embeddings_safe(text_or_texts)
+
+bge_batch_size = 32
+
+import math
+from tqdm import tqdm
+
+def get_bge_embeddings_safe(sentences):
+    
+    embeddings = []
+    
+    num_batches = math.ceil(len(sentences) / bge_batch_size)
+    
+    for i in tqdm( range(num_batches) ):
+        # print("run bge with batch ", i)
+        start_index = i * bge_batch_size
+        end_index = min(len(sentences), start_index + bge_batch_size)
+        batch = sentences[start_index:end_index]
+        embs = get_bge_embeddings(batch)
+        embeddings.extend(embs)
+        
+    return embeddings
+
+# === add bge model
+
 def tiktokenizer( text ):
     global _enc_model
 
@@ -208,6 +269,11 @@ def is_chinese_or_english(text):
         return "chinese"
     else:
         return "english"
+
+
+def get_embedding_openai(text, model="text-embedding-ada-002"):
+    text = text.replace("\n", " ")
+    return openai.Embedding.create(input=[text], model=model)['data'][0]['embedding']
 
 
 def get_embedding_for_english(text, model="text-embedding-ada-002"):
