@@ -51,6 +51,9 @@ class ChatHaruhi:
 
         if embedding == 'luotuo_openai':
             self.embedding = luotuo_openai_embedding
+        elif embedding == 'bge_en':
+            from .utils import get_bge_embedding
+            self.embedding = get_bge_embedding
         else:
             print(f'warning! undefined embedding {embedding}, use luotuo_openai instead.')
             self.embedding = luotuo_openai_embedding
@@ -86,7 +89,14 @@ class ChatHaruhi:
             datas = dataset["train"]
             from .utils import base64_to_float_array
             # 暂时只有一种embedding 'luotuo_openai'
-            embed_name = 'luotuo_openai'
+            if embedding == 'luotuo_openai':
+                embed_name = 'luotuo_openai'
+            elif embedding == 'bge_en':
+                embed_name = 'bge_en_s15'
+            else:
+                print('warning! unkown embedding name ', embedding ,' while loading role')
+                embed_name = 'luotuo_openai'
+                
             texts = []
             vecs = []
             for data in datas:
