@@ -90,7 +90,11 @@ class ChatHaruhi:
                 dataset = load_dataset(role_from_hf)
                 datas = dataset["train"]
             elif role_from_hf.count("/") >= 2:
-                dataset_name, split_name = role_from_hf.split("/", 1)
+                split_index = role_from_hf.index('/') 
+                second_split_index = role_from_hf.index('/', split_index+1)
+                dataset_name = role_from_hf[:second_split_index] 
+                split_name = role_from_hf[second_split_index+1:]
+                
                 fname = split_name + '.jsonl'
                 dataset = load_dataset(dataset_name,data_files={'train':fname})
                 datas = dataset["train"]
