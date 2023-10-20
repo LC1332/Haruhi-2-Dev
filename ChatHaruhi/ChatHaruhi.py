@@ -85,10 +85,19 @@ class ChatHaruhi:
         elif role_from_hf:
             # TODO move into a function
             from datasets import load_dataset
-            dataset = load_dataset(role_from_hf)
-            datas = dataset["train"]
+
+            if role_from_hf.count("/") == 1:
+                dataset = load_dataset(role_from_hf)
+                datas = dataset["train"]
+            elif role_from_hf.count("/") >= 2:
+                dataset_name, split_name = role_from_hf.split("/", 1)
+                fname = split_name + '.jsonl'
+                dataset = load_dataset(dataset_name,data_files={'train':fname})
+                datas = dataset["train"]
+
+
             from .utils import base64_to_float_array
-            # 暂时只有一种embedding 'luotuo_openai'
+            
             if embedding == 'luotuo_openai':
                 embed_name = 'luotuo_openai'
             elif embedding == 'bge_en':
@@ -96,7 +105,7 @@ class ChatHaruhi:
             else:
                 print('warning! unkown embedding name ', embedding ,' while loading role')
                 embed_name = 'luotuo_openai'
-                
+
             texts = []
             vecs = []
             for data in datas:
