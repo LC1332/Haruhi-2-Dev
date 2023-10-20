@@ -129,7 +129,7 @@ def get_bge_embedding( text_or_texts ):
 bge_batch_size = 32
 
 import math
-from tqdm import tqdm
+# from tqdm import tqdm
 
 def get_bge_embeddings_safe(sentences):
     
@@ -137,7 +137,7 @@ def get_bge_embeddings_safe(sentences):
     
     num_batches = math.ceil(len(sentences) / bge_batch_size)
     
-    for i in tqdm( range(num_batches) ):
+    for i in tqdm.tqdm( range(num_batches) ):
         # print("run bge with batch ", i)
         start_index = i * bge_batch_size
         end_index = min(len(sentences), start_index + bge_batch_size)
