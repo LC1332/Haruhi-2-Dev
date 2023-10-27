@@ -43,6 +43,8 @@ class ChatHaruhi:
             self.story_prefix_prompt = '\n'
         elif llm == "BaiChuan2GPT":
             self.llm, self.tokenizer = self.get_models('BaiChuan2GPT')
+        elif llm == "BaiChuanAPIGPT":
+            self.llm, self.tokenizer = self.get_models('BaiChuanAPIGPT')
         elif llm == "ernie":
             self.llm, self.tokenizer = self.get_models('ernie')
         else:
@@ -187,6 +189,9 @@ class ChatHaruhi:
         elif model_name == "BaiChuan2GPT":
             from .BaiChuan2GPT import BaiChuan2GPT, BaiChuan_tokenizer
             return (BaiChuan2GPT(), BaiChuan_tokenizer)
+        elif model_name == "BaiChuanAPIGPT":
+            from .BaiChuanAPIGPT import BaiChuanAPIGPT
+            return (BaiChuanAPIGPT(), tiktokenizer)
         else:
             print(f'warning! undefined model {model_name}, use openai instead.')
             from .LangChainGPT import LangChainGPT
