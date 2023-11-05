@@ -45,8 +45,10 @@ class ChatHaruhi:
             self.llm, self.tokenizer = self.get_models('BaiChuan2GPT')
         elif llm == "BaiChuanAPIGPT":
             self.llm, self.tokenizer = self.get_models('BaiChuanAPIGPT')
-        elif llm == "ernie":
-            self.llm, self.tokenizer = self.get_models('ernie')
+        elif llm == "ernie3.5":
+            self.llm, self.tokenizer = self.get_models('ernie3.5')
+        elif llm == "ernie4.0":
+            self.llm, self.tokenizer = self.get_models('ernie4.0')
         else:
             print(f'warning! undefined llm {llm}, use openai instead.')
             self.llm, self.tokenizer = self.get_models('openai')
@@ -180,9 +182,12 @@ class ChatHaruhi:
         elif model_name == 'GLMPro':
             from .GLMPro import GLMPro
             return (GLMPro(), tiktokenizer)
-        elif model_name == 'ernie':
+        elif model_name == 'ernie3.5':
             from .ErnieGPT import ErnieGPT
             return (ErnieGPT(), tiktokenizer)
+        elif model_name == 'ernie4.0':
+            from .ErnieGPT import ErnieGPT
+            return (ErnieGPT(model="ernie-bot-4"), tiktokenizer)
         elif model_name == "ChatGLM2GPT":
             from .ChatGLM2GPT import ChatGLM2GPT, GLM_tokenizer
             return (ChatGLM2GPT(), GLM_tokenizer)

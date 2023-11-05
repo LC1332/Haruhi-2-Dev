@@ -1,4 +1,5 @@
 # ErnieGPT.py
+from pyexpat import model
 import erniebot 
 #以下密钥信息从os环境获取
 import os
@@ -20,7 +21,8 @@ class ErnieGPT(BaseLLM):
 
     def __init__(self,model="ernie-bot"):
         super(ErnieGPT,self).__init__()
-        if model not in ["ernie-bot", "ernie-bot-turbo", "ernie-vilg-v2", "ernie-text-embedding"]:
+        self.model = model
+        if model not in ["ernie-bot", "ernie-bot-turbo", "ernie-vilg-v2", "ernie-text-embedding", "ernie-bot-8k", "ernie-bot-4"]:
             raise Exception("Unknown Ernie model")
         # SparkApi.answer =""
         self.messages = []
@@ -56,7 +58,7 @@ class ErnieGPT(BaseLLM):
         lines.insert(-1, '请请模仿上述经典桥段进行回复\n')
         chat_messages[-1]["content"] = '\n'.join(lines)
         # chat_messages[-1]["content"] = "请请模仿上述经典桥段进行回复\n" + chat_messages[-1]["content"] 
-        response = erniebot.ChatCompletion.create(model='ernie-bot', messages=chat_messages)
+        response = erniebot.ChatCompletion.create(model=self.model, messages=chat_messages)
         # message_json = [{"role": "user", "content": self.messages}]
         # SparkApi.answer =""
         # SparkApi.main(appid,api_key,api_secret,self.Spark_url,self.domain,message_json)
