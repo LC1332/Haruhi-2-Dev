@@ -50,30 +50,42 @@ class BaiChuanAPIGPT(BaseLLM):
         self.secret_key = secret_key or BAICHUAN_API_SK
         self.verbose = verbose
         self.model_name = model
-        self.prompts = []
+        self.messages = []
         if self.verbose:
             print('model name, ', self.model_name)
             if self.api_key is None or self.secret_key is None:
                 print('Please set BAICHUAN_API_AK and BAICHUAN_API_SK')
 
     def initialize_message(self):
-        self.prompts = []
+        self.messages = []
+
 
     def ai_message(self, payload):
-        self.prompts.append({"role":"assistant","content":payload})
+        if len(self.messages) == 0:
+            self.user_message("请根据我的要求进行角色扮演:")
+        elif len(self.messages) % 2 == 1:
+            self.messages.append({"role":"assistant","content":payload})
+        elif len(self.messages)% 2 == 0:
+            self.messages[-1]["content"] += "\n"+ payload
 
     def system_message(self, payload):
-        self.prompts.append({"role":"user","content":payload})
+        
+        self.messages.append({"role":"user","content":payload}) 
+        
 
     def user_message(self, payload):
-        self.prompts.append({"role":"user","content":payload})
+        if len(self.messages) % 2 == 0:
+            self.messages.append({"role":"user","content":payload})
+            # self.messages[-1]["content"] += 
+        elif len(self.messages)% 2 == 1:
+            self.messages[-1]["content"] += "\n"+ payload
 
     def get_response(self):
         max_try = 5
         sleep_interval = 3
 
         for i in range(max_try):
-            response = do_request(self.prompts, self.api_key, self.secret_key)
+            response = do_request(self.messages, self.api_key, self.secret_key)
             if response is not None:
                 if self.verbose:
                     print('Get Baichuan API response success')
@@ -86,6 +98,6 @@ class BaiChuanAPIGPT(BaseLLM):
                 time.sleep(sleep_interval)
             
     def print_prompt(self):
-        for message in self.prompts:
+        for message in self.messages:
             print(f"{message['role']}: {message['content']}")
             
