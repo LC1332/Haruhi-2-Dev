@@ -3,6 +3,7 @@ import json
 import time
 import hashlib
 import requests
+import copy 
 
 from .BaseLLM import BaseLLM
 
@@ -83,9 +84,14 @@ class BaiChuanAPIGPT(BaseLLM):
     def get_response(self):
         max_try = 5
         sleep_interval = 3
+        
+        chat_messages = copy.deepcopy(self.messages)
+        lines = chat_messages[-1]["content"].split('\n')
+        lines.insert(-1, '请请模仿上述经典桥段进行回复\n')
+        chat_messages[-1]["content"] = '\n'.join(lines)
 
         for i in range(max_try):
-            response = do_request(self.messages, self.api_key, self.secret_key)
+            response = do_request(chat_messages, self.api_key, self.secret_key)
             if response is not None:
                 if self.verbose:
                     print('Get Baichuan API response success')
