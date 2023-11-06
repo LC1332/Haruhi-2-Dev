@@ -44,7 +44,7 @@ def text_censor(text):
     request_url = request_url + "?access_token=" + access_token
     headers = {'content-type': 'application/x-www-form-urlencoded'}
     response = requests.post(request_url, data=params, headers=headers)
-    return response.json()["conclusion"]
+    return response.json()["conclusion"] == "合规"
 
 def package_role( system_prompt, texts_path , embedding ):
     datas = []
