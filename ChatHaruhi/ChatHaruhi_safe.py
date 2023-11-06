@@ -5,7 +5,7 @@ from .utils import luotuo_openai_embedding, tiktokenizer
 
 from .utils import response_postprocess
 
-from .utils import get_access_token, text_censor
+from .utils import text_censor
 
 class ChatHaruhi_safe:
 
