@@ -17,6 +17,35 @@ import os
 
 import tqdm
 
+import requests
+
+
+
+def get_access_token():
+    API_KEY = os.getenv("StoryAudit_API_AK")
+    SECRET_KEY = os.getenv("StoryAudit_API_SK")
+
+    """
+    使用 AK，SK 生成鉴权签名（Access Token）
+    :return: access_token，或是None(如果错误)
+    """
+    url = "https://aip.baidubce.com/oauth/2.0/token"
+    params = {"grant_type": "client_credentials", "client_id": API_KEY, "client_secret": SECRET_KEY}
+    return str(requests.post(url, params=params).json().get("access_token"))
+
+'''
+文本审核接口
+'''
+def text_censor(text):
+    request_url = "https://aip.baidubce.com/rest/2.0/solution/v1/text_censor/v2/user_defined"
+
+    params = {"text":text}
+    access_token = get_access_token()
+    request_url = request_url + "?access_token=" + access_token
+    headers = {'content-type': 'application/x-www-form-urlencoded'}
+    response = requests.post(request_url, data=params, headers=headers)
+    return response.json()["conclusion"]
+
 def package_role( system_prompt, texts_path , embedding ):
     datas = []
 
