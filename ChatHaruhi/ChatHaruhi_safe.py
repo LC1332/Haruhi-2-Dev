@@ -305,7 +305,7 @@ class ChatHaruhi_safe:
                 sum_story_token += story_token
                 story_string += story + self.dialogue_divide_token
         
-        if text_censor(story_string) == "合规":
+        if text_censor(story_string):
             self.llm.user_message(story_string)
         
     def add_history(self):
