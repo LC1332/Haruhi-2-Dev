@@ -45,7 +45,8 @@ def do_request(messages, api_key, secret_key):
         return None
 
 class BaiChuanAPIGPT(BaseLLM):
-    def __init__(self, model="baichuan-api", api_key=None, secret_key=None, verbose=False):
+    def __init__(self, model="baichuan-api", api_key=None, secret_key=None, verbose=False, if_trick = True):
+        self.if_trick = if_trick
         super(BaiChuanAPIGPT, self).__init__()
         self.api_key = api_key or BAICHUAN_API_AK
         self.secret_key = secret_key or BAICHUAN_API_SK
@@ -86,9 +87,11 @@ class BaiChuanAPIGPT(BaseLLM):
         sleep_interval = 3
         
         chat_messages = copy.deepcopy(self.messages)
-        lines = chat_messages[-1]["content"].split('\n')
-        lines.insert(-1, '请请模仿上述经典桥段进行回复\n')
-        chat_messages[-1]["content"] = '\n'.join(lines)
+        
+        if self.if_trick == True:
+            lines = chat_messages[-1]["content"].split('\n')
+            lines.insert(-1, '请请模仿上述经典桥段进行回复\n')
+            chat_messages[-1]["content"] = '\n'.join(lines)
 
         for i in range(max_try):
             response = do_request(chat_messages, self.api_key, self.secret_key)
