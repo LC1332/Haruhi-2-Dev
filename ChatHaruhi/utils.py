@@ -1,6 +1,8 @@
 from argparse import Namespace
 
-import openai
+from openai import OpenAI
+
+client = OpenAI(api_key=<YOUR OPENAI API KEY>)
 from transformers import AutoModel, AutoTokenizer
 import torch
 import random
@@ -302,12 +304,11 @@ def is_chinese_or_english(text):
 
 def get_embedding_openai(text, model="text-embedding-ada-002"):
     text = text.replace("\n", " ")
-    return openai.Embedding.create(input=[text], model=model)['data'][0]['embedding']
-
+    return client.embeddings.create(input = [text], model=model).data[0].embedding
 
 def get_embedding_for_english(text, model="text-embedding-ada-002"):
     text = text.replace("\n", " ")
-    return openai.Embedding.create(input=[text], model=model)['data'][0]['embedding']
+    return client.embeddings.create(input = [text], model=model).data[0].embedding
 
 import os
 
