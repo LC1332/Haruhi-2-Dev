@@ -2,7 +2,8 @@ from argparse import Namespace
 
 from openai import OpenAI
 
-client = OpenAI(api_key=<YOUR OPENAI API KEY>)
+# client = OpenAI(api_key=<YOUR OPENAI API KEY>)
+
 from transformers import AutoModel, AutoTokenizer
 import torch
 import random
