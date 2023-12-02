@@ -287,6 +287,9 @@ def get_embedding_for_chinese(model, texts):
 
 
 def is_chinese_or_english(text):
+    # no longer use online openai api
+    return "chinese"
+
     text = list(text)
     is_chinese, is_english = 0, 0
 
