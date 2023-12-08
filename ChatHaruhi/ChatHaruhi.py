@@ -58,6 +58,9 @@ class ChatHaruhi:
         elif embedding == 'bge_en':
             from .utils import get_bge_embedding
             self.embedding = get_bge_embedding
+        elif embedding == 'bge_zh':
+            from .utils import get_bge_zh_embedding
+            self.embedding = get_bge_zh_embedding
         else:
             print(f'warning! undefined embedding {embedding}, use luotuo_openai instead.')
             self.embedding = luotuo_openai_embedding
@@ -110,6 +113,8 @@ class ChatHaruhi:
                 embed_name = 'luotuo_openai'
             elif embedding == 'bge_en':
                 embed_name = 'bge_en_s15'
+            elif embedding == 'bge_zh':
+                embed_name = 'bge_zh_s15'
             else:
                 print('warning! unkown embedding name ', embedding ,' while loading role')
                 embed_name = 'luotuo_openai'
