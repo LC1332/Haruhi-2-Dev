@@ -297,6 +297,26 @@ class ChatHaruhi:
         self.db.save(db_path)
 
     def generate_prompt( self, text, role):
+        from langchain.schema import (
+            AIMessage,
+            HumanMessage,
+            SystemMessage
+        )
+        messages = self.generate_messages( text, role )
+        prompt = ""
+        for msg in messages:
+            if isinstance(msg, HumanMessage):
+                prompt += msg.content + "\n"
+            elif isinstance(msg, AIMessage):
+                prompt += msg.content + "\n"
+            elif isinstance(msg, SystemMessage):
+                prompt += msg.content + "\n"
+        return prompt
+
+
+
+
+    def generate_messages( self, text, role):
         # add system prompt
         self.llm.initialize_message()
         self.llm.system_message(self.system_prompt)
