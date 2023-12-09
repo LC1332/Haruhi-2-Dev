@@ -332,7 +332,7 @@ class ChatHaruhi:
     def append_response( self, response, last_query = None ):
         if last_query == None:
             last_query_record = ""
-            if hasattr( self, last_query ):
+            if hasattr( self, "last_query" ):
                 last_query_record = self.last_query
         else:
             last_query_record = last_query
