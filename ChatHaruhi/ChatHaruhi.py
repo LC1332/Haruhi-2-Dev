@@ -314,8 +314,6 @@ class ChatHaruhi:
         return prompt
 
 
-
-
     def generate_messages( self, text, role):
         # add system prompt
         self.llm.initialize_message()
