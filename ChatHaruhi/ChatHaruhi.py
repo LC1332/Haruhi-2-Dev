@@ -5,10 +5,21 @@ from .utils import luotuo_openai_embedding, tiktokenizer
 
 from .utils import response_postprocess
 
+def get_text_from_data( data ):
+    if "text" in data:
+        return data['text']
+    elif "enc_text" in data:
+        from .utils import base64_to_string
+        return base64_to_string( data['enc_text'] )
+    else:
+        print("warning! failed to get text from data ", data)
+        return ""
+
 class ChatHaruhi:
 
     def __init__(self, system_prompt = None, \
-                 role_name = None, role_from_hf = None, \
+                 role_name = None, role_from_hf = None,
+                 role_from_jsonl = None,  \
                  story_db=None, story_text_folder = None, \
                  llm = 'openai', \
                  embedding = 'luotuo_openai', \
@@ -105,9 +116,6 @@ class ChatHaruhi:
                 fname = split_name + '.jsonl'
                 dataset = load_dataset(dataset_name,data_files={'train':fname})
                 datas = dataset["train"]
-
-
-            from .utils import base64_to_float_array
             
             if embedding == 'luotuo_openai':
                 embed_name = 'luotuo_openai'
@@ -119,18 +127,33 @@ class ChatHaruhi:
                 print('warning! unkown embedding name ', embedding ,' while loading role')
                 embed_name = 'luotuo_openai'
 
-            texts = []
-            vecs = []
-            for data in datas:
-                if data[embed_name] == 'system_prompt':
-                    self.system_prompt = data['text']
-                elif data[embed_name] == 'config':
-                    pass
-                else:
-                    vec = base64_to_float_array( data[embed_name] )
-                    text = data['text']
-                    vecs.append( vec )
-                    texts.append( text )
+            texts, vecs, self.system_prompt = self.extract_text_vec_from_datas(datas, embed_name)
+
+            self.build_story_db_from_vec( texts, vecs )
+
+        elif role_from_jsonl:
+            import json
+            datas = []
+            with open( role_from_jsonl , encoding="utf-8") as f:
+                for line in f:
+                    try:
+                        data = json.loads(line)
+                        # 逐行处理JSON数据
+                        datas.append(data)
+                    except:
+                        print("warning! failed to load json line ", line)
+
+            if embedding == 'luotuo_openai':
+                embed_name = 'luotuo_openai'
+            elif embedding == 'bge_en':
+                embed_name = 'bge_en_s15'
+            elif embedding == 'bge_zh':
+                embed_name = 'bge_zh_s15'
+            else:
+                print('warning! unkown embedding name ', embedding ,' while loading role')
+                embed_name = 'luotuo_openai'
+
+            texts, vecs, self.system_prompt = self.extract_text_vec_from_datas(datas, embed_name)
 
             self.build_story_db_from_vec( texts, vecs )
             
@@ -157,6 +180,25 @@ class ChatHaruhi:
             # user setting will override default setting
 
         self.dialogue_history = []
+
+    def extract_text_vec_from_datas( self, datas, embed_name ):
+        # extract text and vec from huggingface dataset
+        # return texts, vecs
+        from .utils import base64_to_float_array
+
+        texts = []
+        vecs = []
+        for data in datas:
+            if data[embed_name] == 'system_prompt':
+                system_prompt = get_text_from_data( data )
+            elif data[embed_name] == 'config':
+                pass
+            else:
+                vec = base64_to_float_array( data[embed_name] )
+                text = get_text_from_data( data )
+                vecs.append( vec )
+                texts.append( text )
+        return texts, vecs, system_prompt
 
         
 
@@ -253,6 +295,32 @@ class ChatHaruhi:
     
     def save_story_db(self, db_path):
         self.db.save(db_path)
+
+    def generate_prompt( self, text, role):
+        # add system prompt
+        self.llm.initialize_message()
+        self.llm.system_message(self.system_prompt)
+
+        # add story
+        query = self.get_query_string(text, role)
+        self.add_story( query )
+        self.last_query = query
+
+        # add query
+        self.llm.user_message(query)
+
+        return self.llm.messages
+    
+    def append_response( self, response, last_query = None ):
+        if last_query == None:
+            last_query_record = ""
+            if hasattr( self, last_query ):
+                last_query_record = self.last_query
+        else:
+            last_query_record = last_query
+
+        # record dialogue history
+        self.dialogue_history.append((last_query_record, response))
         
     def chat(self, text, role):
         # add system prompt
