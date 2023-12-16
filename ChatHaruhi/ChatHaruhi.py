@@ -60,6 +60,8 @@ class ChatHaruhi:
             self.llm, self.tokenizer = self.get_models('ernie3.5')
         elif llm == "ernie4.0":
             self.llm, self.tokenizer = self.get_models('ernie4.0')
+        elif "qwen" in llm:
+            self.llm, self.tokenizer = self.get_models(llm)
         else:
             print(f'warning! undefined llm {llm}, use openai instead.')
             self.llm, self.tokenizer = self.get_models('openai')
@@ -244,6 +246,29 @@ class ChatHaruhi:
         elif model_name == "BaiChuanAPIGPT":
             from .BaiChuanAPIGPT import BaiChuanAPIGPT
             return (BaiChuanAPIGPT(), tiktokenizer)
+        elif "qwen" in model_name:
+            if model_name == "qwen118k_raw":
+                from .Qwen118k2GPT import Qwen118k2GPT, Qwen_tokenizer
+                return (Qwen118k2GPT(model = "Qwen/Qwen-1_8B-Chat"), Qwen_tokenizer)
+            from huggingface_hub import HfApi 
+            from huggingface_hub.hf_api import ModelFilter
+            qwen_api = HfApi()
+            qwen_models = qwen_api.list_models(
+                filter = ModelFilter(model_name=model_name),
+                author = "silk-road"             
+            )
+            qwen_models_id = []
+            for qwen_model in qwen_models:
+                qwen_models_id.append(qwen_model.id)
+                # print(model.id)
+            if "silk-road/" + model_name in qwen_models_id:
+                from .Qwen118k2GPT import Qwen118k2GPT, Qwen_tokenizer
+                return (Qwen118k2GPT(model = "silk-road/" + model_name), Qwen_tokenizer)
+            else:
+                print(f'warning! undefined model {model_name}, use openai instead.')
+                from .LangChainGPT import LangChainGPT
+                return (LangChainGPT(), tiktokenizer) 
+            # print(models_id)
         else:
             print(f'warning! undefined model {model_name}, use openai instead.')
             from .LangChainGPT import LangChainGPT
