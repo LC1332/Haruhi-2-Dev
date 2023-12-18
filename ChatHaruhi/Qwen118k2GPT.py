@@ -16,7 +16,6 @@ def initialize_Qwen2LORA(model):
     if model_qwen is None:
         model_qwen = AutoModelForCausalLM.from_pretrained(
             model,
-            torch_dtype=torch.float16,
             device_map="auto",
             trust_remote_code=True
         )
