@@ -100,34 +100,40 @@ class ChatHaruhi:
         self.db_type = db_type
         
         if role_name:
-            # TODO move into a function
-            from .role_name_to_file import get_folder_role_name
-            # correct role_name to folder_role_name
-            role_name, url = get_folder_role_name(role_name)
+            from .role_name_to_file import get_en_role_name
+            en_role_name = get_en_role_name( role_name )
 
-            unzip_folder = f'./temp_character_folder/temp_{role_name}'
-            db_folder = os.path.join(unzip_folder, f'content/{role_name}')
-            system_prompt = os.path.join(unzip_folder, f'content/system_prompt.txt')
+            role_from_hf = "silk-road/ChatHaruhi-RolePlaying/" + en_role_name
+            
+            # # TODO move into a function
+            # from .role_name_to_file import get_folder_role_name
+            # # correct role_name to folder_role_name
+            # role_name, url = get_folder_role_name(role_name)
 
-            if not os.path.exists(unzip_folder):
-                # not yet downloaded
-                # url = f'https://github.com/LC1332/Haruhi-2-Dev/raw/main/data/character_in_zip/{role_name}.zip'
-                import requests, zipfile, io
-                r = requests.get(url)
-                z = zipfile.ZipFile(io.BytesIO(r.content))
-                z.extractall(unzip_folder)
+            # unzip_folder = f'./temp_character_folder/temp_{role_name}'
+            # db_folder = os.path.join(unzip_folder, f'content/{role_name}')
+            # system_prompt = os.path.join(unzip_folder, f'content/system_prompt.txt')
 
-            if self.verbose:
-                print(f'loading pre-defined character {role_name}...')
-            if self.db_type == None:
-                self.db_type = "chroma"
-            elif not self.db_type in ["chroma","Chroma","ChromaDB","chromadb"]:
-                print("warning! directly load folder from dbtype ", self.db_type, " has not been implemented yet, change back to chroma, or try use role_from_hf to load role instead")
-                self.db_type = "chorma"
-            self.db = get_db_from_type(self.db_type)
-            self.db.load(db_folder)
-            self.system_prompt = self.check_system_prompt(system_prompt)
-        elif role_from_hf:
+            # if not os.path.exists(unzip_folder):
+            #     # not yet downloaded
+            #     # url = f'https://github.com/LC1332/Haruhi-2-Dev/raw/main/data/character_in_zip/{role_name}.zip'
+            #     import requests, zipfile, io
+            #     r = requests.get(url)
+            #     z = zipfile.ZipFile(io.BytesIO(r.content))
+            #     z.extractall(unzip_folder)
+
+            # if self.verbose:
+            #     print(f'loading pre-defined character {role_name}...')
+            # if self.db_type == None:
+            #     self.db_type = "chroma"
+            # elif not self.db_type in ["chroma","Chroma","ChromaDB","chromadb"]:
+            #     print("warning! directly load folder from dbtype ", self.db_type, " has not been implemented yet, change back to chroma, or try use role_from_hf to load role instead")
+            #     self.db_type = "chorma"
+            # self.db = get_db_from_type(self.db_type)
+            # self.db.load(db_folder)
+            # self.system_prompt = self.check_system_prompt(system_prompt)
+
+        if role_from_hf:
             if self.db_type == None:
                 self.db_type = "naive"
 
@@ -385,7 +391,7 @@ class ChatHaruhi:
         query = self.get_query_string(text, role)
         self.add_story( query )
         self.last_query = query
-        
+
         # add history
         self.add_history()
 

@@ -55,6 +55,12 @@ role_name_Haruhiu = {'汤师爷': 'tangshiye', 'tangshiye': 'tangshiye', 'Tangsh
                      'Yuqian': 'yuqian', 'Professor McGonagall': 'McGonagall', 
                      'Professor Dumbledore': 'Dumbledore'}
 
+def get_en_role_name( role_name ):
+    if role_name in role_name_Haruhiu:
+        return role_name_Haruhiu[role_name]
+    else:
+        return "haruhi"
+
 # input role_name , nick name is also allowed
 # output folder_role_name and url url = f'https://github.com/LC1332/Haruhi-2-Dev/raw/main/data/character_in_zip/{role_name}.zip'
 def get_folder_role_name(role_name):
