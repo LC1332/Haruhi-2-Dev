@@ -96,6 +96,8 @@ class ChatHaruhi:
         else:
             print(f'warning! undefined embedding {embedding}, use luotuo_openai instead.')
             self.embedding = luotuo_openai_embedding
+
+        self.db_type = db_type
         
         if role_name:
             # TODO move into a function
