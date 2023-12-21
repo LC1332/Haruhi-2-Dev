@@ -43,7 +43,7 @@ class ChatHaruhi:
                  embedding = 'luotuo_openai', \
                  max_len_story = None, max_len_history = None,
                  verbose = False,
-                 db_type = "chroma"):
+                 db_type = None):
         super(ChatHaruhi, self).__init__()
         self.verbose = verbose
 
@@ -96,11 +96,6 @@ class ChatHaruhi:
         else:
             print(f'warning! undefined embedding {embedding}, use luotuo_openai instead.')
             self.embedding = luotuo_openai_embedding
-
-        if db_type == None:
-            self.db_type = "chroma"
-        else:
-            self.db_type = db_type
         
         if role_name:
             # TODO move into a function
@@ -122,15 +117,18 @@ class ChatHaruhi:
 
             if self.verbose:
                 print(f'loading pre-defined character {role_name}...')
-            
-            if not self.db_type in ["chroma","Chroma","ChromaDB","chromadb"]:
+            if self.db_type == None:
+                self.db_type = "chroma"
+            elif not self.db_type in ["chroma","Chroma","ChromaDB","chromadb"]:
                 print("warning! directly load folder from dbtype ", self.db_type, " has not been implemented yet, change back to chroma, or try use role_from_hf to load role instead")
                 self.db_type = "chorma"
             self.db = get_db_from_type(self.db_type)
             self.db.load(db_folder)
             self.system_prompt = self.check_system_prompt(system_prompt)
         elif role_from_hf:
-            # TODO move into a function
+            if self.db_type == None:
+                self.db_type = "naive"
+
             from datasets import load_dataset
 
             if role_from_hf.count("/") == 1:
@@ -161,6 +159,9 @@ class ChatHaruhi:
             self.build_story_db_from_vec( texts, vecs )
 
         elif role_from_jsonl:
+            if self.db_type == None:
+                self.db_type = "naive"
+
             import json
             datas = []
             with open( role_from_jsonl , encoding="utf-8") as f:
@@ -187,12 +188,16 @@ class ChatHaruhi:
             self.build_story_db_from_vec( texts, vecs )
             
         elif story_db:
-            if not self.db_type in ["chroma","Chroma","ChromaDB","chromadb"]:
+            if self.db_type == None:
+                self.db_type = "chroma"
+            elif not self.db_type in ["chroma","Chroma","ChromaDB","chromadb"]:
                 print("warning! directly load folder from dbtype ", self.db_type, " has not been implemented yet, change back to chroma,or try use role_from_hf to load role instead")
                 self.db_type = "chorma"
             self.db = get_db_from_type(self.db_type)
             self.db.load(story_db)
         elif story_text_folder:
+            if self.db_type == None:
+                self.db_type = "naive"
             # print("Building story database from texts...")
             self.db = self.build_story_db(story_text_folder) 
         else:
