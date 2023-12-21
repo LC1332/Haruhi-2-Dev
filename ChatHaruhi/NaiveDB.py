@@ -7,7 +7,7 @@ from math import sqrt
 
 class NaiveDB(BaseDB):
     def __init__(self):
-        self.verbose = True
+        self.verbose = False
         self.init_db()
 
     def init_db(self):
@@ -60,6 +60,7 @@ class NaiveDB(BaseDB):
         # 获取最相似的n_results个结果
         top_indices = sorted(range(len(similarities)), key=lambda i: similarities[i], reverse=True)[:n_results]
         top_documents = [self.documents[i] for i in top_indices]
+        return top_documents
 
     def init_from_docs(self, vectors, documents):
         if(self.verbose):
