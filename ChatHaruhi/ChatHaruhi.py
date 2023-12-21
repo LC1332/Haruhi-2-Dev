@@ -18,10 +18,12 @@ def get_text_from_data( data ):
 def get_db_from_type( db_type ):
     if db_type in ["chroma","Chroma","ChromaDB","chromadb"]:
         from .ChromaDB import ChromaDB
-        return ChromaDB()
+        ans = ChromaDB()
+        return ans
     elif db_type in ["naive"]:
         from .NaiveDB import NaiveDB
-        return NaiveDB()
+        ans = NaiveDB()
+        return ans
     else:
         try:
             from .ChromaDB import ChromaDB
