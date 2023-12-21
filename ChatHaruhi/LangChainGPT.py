@@ -39,8 +39,6 @@ from langchain.schema import (
 from .BaseLLM import BaseLLM
 
 import os
-from dotenv import load_dotenv
-
 
 class LangChainGPT(BaseLLM):
 
@@ -48,6 +46,7 @@ class LangChainGPT(BaseLLM):
         super(LangChainGPT, self).__init__()
         self.model = model
         if "OPENAI_API_BASE" in os.environ:
+            from dotenv import load_dotenv
             load_dotenv()
             api_base = os.environ["OPENAI_API_BASE"]
             api_key = os.environ["OPENAI_API_KEY"]
