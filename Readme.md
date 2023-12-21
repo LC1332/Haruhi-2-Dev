@@ -8,6 +8,8 @@
 
 请大家回去找原项目 https://github.com/LC1332/Chat-Haruhi-Suzumiya
 
+- 选择性移除了ChatHaruhi( https://github.com/LC1332/Haruhi-2-Dev ) 下chromadb的依赖 ，在text_folder载入, hugging_face载入和jsonl载入下 默认使用一个NaiveDB而不是ChromaDB。
+- TODO: 增加adapter，支持即使用openai建库仍然可以用任意的embedding进行query
 
 # ChatHaruhi2.0的文档
 
@@ -22,7 +24,7 @@ pip -q install chatharuhi
 依赖的库为
 
 ```shell
-pip -q install transformers openai tiktoken langchain chromadb zhipuai
+pip -q install transformers openai tiktoken langchain zhipuai
 ```
 
 ### 从hugging face载入角色
@@ -55,6 +57,33 @@ print(response)
 ```
 
 这就可以直接进行调用了。
+
+**role_name = 的载入方式仍然依赖chromaDB**
+
+### HuggingFace和jsonl载入
+
+目前推荐jsonl或者Hugging Face的方式载入，如下:
+
+这些角色可以通过
+
+```python
+chatbot = ChatHaruhi( role_from_hf = 'silk-road/ChatHaruhi-from-RoleLLM/Jack-Sparrow', \
+                      llm = 'openai',
+                      embedding = 'bge_en')
+```
+
+这里要求silk-road/ChatHaruhi-from-RoleLLM的数据集项目下必须有Jack-Sparrow.jsonl
+
+也可以使用
+
+
+```python
+chatbot = ChatHaruhi( role_from_hf = 'Your_local_jsonl', \
+                      llm = 'openai',
+                      embedding = 'bge_en')
+```
+
+来进行载入
 
 ### 分开载入system_prompt和story_db
 
