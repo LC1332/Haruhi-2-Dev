@@ -385,6 +385,9 @@ class ChatHaruhi:
         query = self.get_query_string(text, role)
         self.add_story( query )
         self.last_query = query
+        
+        # add history
+        self.add_history()
 
         # add query
         self.llm.user_message(query)

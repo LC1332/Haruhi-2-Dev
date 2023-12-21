@@ -24,7 +24,7 @@ pip -q install chatharuhi
 依赖的库为
 
 ```shell
-pip -q install transformers openai tiktoken langchain zhipuai
+pip -q install transformers openai tiktoken langchain datasets
 ```
 
 ### 从hugging face载入角色
