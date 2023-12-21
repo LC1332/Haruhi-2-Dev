@@ -17,6 +17,9 @@ class NaiveDB(BaseDB):
         self.documents = []
         self.norms = []
 
+    def save(self, file_path):
+        print( "warning! directly save folder from dbtype NaiveDB has not been implemented yet, try use role_from_hf to load role instead" )
+
     def load(self, file_path):
         print( "warning! directly load folder from dbtype NaiveDB has not been implemented yet, try use role_from_hf to load role instead" )
 
