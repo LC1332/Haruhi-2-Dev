@@ -1,4 +1,4 @@
-from .ChromaDB import ChromaDB
+
 import os
 
 from .utils import luotuo_openai_embedding, tiktokenizer
@@ -14,6 +14,22 @@ def get_text_from_data( data ):
     else:
         print("warning! failed to get text from data ", data)
         return ""
+    
+def get_db_from_type( db_type ):
+    if db_type in ["chroma","Chroma","ChromaDB","chromadb"]:
+        from .ChromaDB import ChromaDB
+        return ChromaDB()
+    elif db_type in ["naive"]:
+        from .NaiveDB import NaiveDB
+        return NaiveDB()
+    else:
+        try:
+            from .ChromaDB import ChromaDB
+            ans = ChromaDB()
+        except:
+            ans = NaiveDB()
+        return ans
+
 
 class ChatHaruhi:
 
@@ -24,7 +40,8 @@ class ChatHaruhi:
                  llm = 'openai', \
                  embedding = 'luotuo_openai', \
                  max_len_story = None, max_len_history = None,
-                 verbose = False):
+                 verbose = False,
+                 db_type = "chroma"):
         super(ChatHaruhi, self).__init__()
         self.verbose = verbose
 
@@ -77,6 +94,11 @@ class ChatHaruhi:
         else:
             print(f'warning! undefined embedding {embedding}, use luotuo_openai instead.')
             self.embedding = luotuo_openai_embedding
+
+        if db_type == None:
+            self.db_type = "chroma"
+        else:
+            self.db_type = db_type
         
         if role_name:
             # TODO move into a function
@@ -99,7 +121,7 @@ class ChatHaruhi:
             if self.verbose:
                 print(f'loading pre-defined character {role_name}...')
             
-            self.db = ChromaDB()
+            self.db = get_db_from_type(self.db_type)
             self.db.load(db_folder)
             self.system_prompt = self.check_system_prompt(system_prompt)
         elif role_from_hf:
@@ -160,7 +182,7 @@ class ChatHaruhi:
             self.build_story_db_from_vec( texts, vecs )
             
         elif story_db:
-            self.db = ChromaDB() 
+            self.db = get_db_from_type(self.db_type)
             self.db.load(story_db)
         elif story_text_folder:
             # print("Building story database from texts...")
@@ -283,13 +305,13 @@ class ChatHaruhi:
             return (1500, 1200)
         
     def build_story_db_from_vec( self, texts, vecs ):
-        self.db = ChromaDB()
+        self.db = get_db_from_type(self.db_type)
 
         self.db.init_from_docs( vecs, texts)
 
     def build_story_db(self, text_folder):
         # 实现读取文本文件夹,抽取向量的逻辑
-        db = ChromaDB()
+        db = get_db_from_type(self.db_type)
 
         strs = []
 
