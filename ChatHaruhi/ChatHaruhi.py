@@ -123,6 +123,9 @@ class ChatHaruhi:
             if self.verbose:
                 print(f'loading pre-defined character {role_name}...')
             
+            if not self.db_type in ["chroma","Chroma","ChromaDB","chromadb"]:
+                print("warning! directly load folder from dbtype ", self.db_type, " has not been implemented yet, change back to chroma, or try use role_from_hf to load role instead")
+                self.db_type = "chorma"
             self.db = get_db_from_type(self.db_type)
             self.db.load(db_folder)
             self.system_prompt = self.check_system_prompt(system_prompt)
@@ -184,6 +187,9 @@ class ChatHaruhi:
             self.build_story_db_from_vec( texts, vecs )
             
         elif story_db:
+            if not self.db_type in ["chroma","Chroma","ChromaDB","chromadb"]:
+                print("warning! directly load folder from dbtype ", self.db_type, " has not been implemented yet, change back to chroma,or try use role_from_hf to load role instead")
+                self.db_type = "chorma"
             self.db = get_db_from_type(self.db_type)
             self.db.load(story_db)
         elif story_text_folder:
