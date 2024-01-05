@@ -79,6 +79,8 @@ class ChatHaruhi:
             self.llm, self.tokenizer = self.get_models('ernie3.5')
         elif llm == "ernie4.0":
             self.llm, self.tokenizer = self.get_models('ernie4.0')
+        elif llm == "foo" or llm == "Foo":
+            self.llm, self.tokenizer = self.get_models('foo')
         elif "qwen" in llm:
             self.llm, self.tokenizer = self.get_models(llm)
         else:
@@ -289,6 +291,9 @@ class ChatHaruhi:
         elif model_name == "BaiChuanAPIGPT":
             from .BaiChuanAPIGPT import BaiChuanAPIGPT
             return (BaiChuanAPIGPT(), tiktokenizer)
+        elif model_name == "foo":
+            from .FooLLM import FooLLM
+            return (FooLLM(), tiktokenizer)
         elif "qwen" in model_name:
             if model_name == "qwen118k_raw":
                 from .Qwen118k2GPT import Qwen118k2GPT, Qwen_tokenizer
@@ -365,21 +370,37 @@ class ChatHaruhi:
         self.db.save(db_path)
 
     def generate_prompt( self, text, role):
-        from langchain.schema import (
-            AIMessage,
-            HumanMessage,
-            SystemMessage
-        )
-        messages = self.generate_messages( text, role )
-        prompt = ""
-        for msg in messages:
-            if isinstance(msg, HumanMessage):
-                prompt += msg.content + "\n"
-            elif isinstance(msg, AIMessage):
-                prompt += msg.content + "\n"
-            elif isinstance(msg, SystemMessage):
-                prompt += msg.content + "\n"
-        return prompt
+        from .FooLLM import FooLLM
+        if isinstance(self.llm, FooLLM):
+            prompt = ""
+            messages = self.generate_messages( text, role )
+            for msg in messages:
+                role = msg["role"]
+                content = msg["content"]
+                if role == "AI":
+                    prompt += content + "\n"
+                elif role == "System":
+                    prompt += content + "\n"
+                elif role == "User":
+                    prompt += content + "\n"
+            return prompt
+        else:
+            print("suggest to set llm = foo later")
+            from langchain.schema import (
+                AIMessage,
+                HumanMessage,
+                SystemMessage
+            )
+            messages = self.generate_messages( text, role )
+            prompt = ""
+            for msg in messages:
+                if isinstance(msg, HumanMessage):
+                    prompt += msg.content + "\n"
+                elif isinstance(msg, AIMessage):
+                    prompt += msg.content + "\n"
+                elif isinstance(msg, SystemMessage):
+                    prompt += msg.content + "\n"
+            return prompt
 
 
     def generate_messages( self, text, role):
