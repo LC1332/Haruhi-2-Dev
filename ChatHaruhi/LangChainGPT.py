@@ -52,6 +52,13 @@ class LangChainGPT(BaseLLM):
             api_key = os.environ["OPENAI_API_KEY"]
             self.chat = ChatOpenAI(model=self.model, openai_api_base=api_base)
         else:
+
+            api_key = os.environ.get("OPENAI_API_KEY", None)
+
+            if api_key is None:
+                print("warning! call LangChainGPT but openai key has not yet been set, use idle key instead")
+                os["OPENAI_API_KEY"] = "not_a_key"
+
             self.chat = ChatOpenAI(model=self.model)
         # add api_base        
         self.messages = []
