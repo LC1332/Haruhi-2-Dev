@@ -428,4 +428,35 @@ def get_cosine_similarity( v1, v2):
     return torch.cosine_similarity(v1, v2, dim=0).item()
 
     
+# ===角色对话缓存===
 
+import pickle
+
+
+cache_sign = True
+
+cache = None 
+def cached(func):
+	def wrapper(*args, **kwargs):	
+
+		global cache
+		cache_path = 'rpa_cache.pkl'
+		if cache == None:
+			if not os.path.exists(cache_path):
+				cache = {}
+			else:
+				cache = pickle.load(open(cache_path, 'rb'))  
+
+		key = ( func.__name__, str([args[0].role_name, args[0].__class__, args[0].llm_type , args[0].dialogue_history]), str(kwargs.items()))
+		
+		if (cache_sign and key in cache and cache[key] not in [None, '[TOKEN LIMIT]']) :
+			return cache[key]
+		else:
+			
+			result = func(*args, **kwargs)
+			if result != 'busy' and result != None:
+				cache[key] = result
+				pickle.dump(cache, open(cache_path, 'wb'))
+			return result
+
+	return wrapper
