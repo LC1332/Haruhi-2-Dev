@@ -447,7 +447,7 @@ def cached(func):
 			else:
 				cache = pickle.load(open(cache_path, 'rb'))  
 
-		key = ( func.__name__, str([args[0].role_name, args[0].__class__, args[0].llm_type , args[0].dialogue_history]), str(kwargs.items()))
+		key = ( func.__name__, str([args[0].role_name, args[0].llm.__class__, args[0].dialogue_history]), str(kwargs.items()))
 		
 		if (cache_sign and key in cache and cache[key] not in [None, '[TOKEN LIMIT]']) :
 			return cache[key]
