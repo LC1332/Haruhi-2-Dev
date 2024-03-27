@@ -5,6 +5,8 @@ from .utils import luotuo_openai_embedding, tiktokenizer
 
 from .utils import response_postprocess
 
+from .utils import cached
+
 def get_text_from_data( data ):
     if "text" in data:
         return data['text']
@@ -106,6 +108,9 @@ class ChatHaruhi:
         self.db_type = db_type
         
         if role_name:
+
+            self.role_name = role_name # although it seems that the name will be automatically assigned
+
             from .role_name_to_file import get_en_role_name
             en_role_name = get_en_role_name( role_name )
 
@@ -140,6 +145,9 @@ class ChatHaruhi:
             # self.system_prompt = self.check_system_prompt(system_prompt)
 
         if role_from_hf:
+
+            self.role_name = role_from_hf # ensure that characters load this way also get their names
+
             if self.db_type == None:
                 self.db_type = "naive"
 
@@ -441,7 +449,8 @@ class ChatHaruhi:
 
         # record dialogue history
         self.dialogue_history.append((last_query_record, response))
-        
+
+    @cached  
     def chat(self, text, role):
         # add system prompt
         self.llm.initialize_message()
